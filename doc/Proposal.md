@@ -9,7 +9,8 @@ Both students and instructors need a simple and efficient way to manage courses.
 
 ## Description
 
-By storing information of students, professors, course information and enrollment schedules into databases, we allow both students and professors to easily manage their courses all in one place. This will help them track their schedule in a simple way, and save time registering and managing courses during enrollment period.
+By storing information of students, professors, course information and enrollment schedules into databases, we allow both students and professors to easily manage their courses all in one place. This will help them track their schedule in a simple way, and save time registering and managing courses during enrollment period, then solve the problem that students may mess up their courses when they have multiple courses and professors may be not able to differentiate different sections of the same course they teach.
+
 
 Our project aims for two types of users: students and professors. For students, we allow them to track and manage their semester course schedules and grades, rate their courses and leave comments, and also search for detailed information of their favorite courses and make easy registrations, just like walking inside a supermarket and picking up goods they want! For professors, they can manage courses they instruct, give grades to students, and also see comments for their instructions.
 
@@ -24,6 +25,8 @@ Our project is practical and tackles the need for an efficient course registrati
 ## Realness
 
 We will collect course data from UIUC Course Explorer, and create data for professors according to the instructors in the course information. Student’s information and initial enrollment status can be randomly generated.
+
+We will try to ensure the authenticity of the data by using as much data as we can from the website of UIUC Course Explore. If we can’t determine the exact data, we will search it on other websites of UIUC and try to make it exact.
 
 ## Functionality
 
