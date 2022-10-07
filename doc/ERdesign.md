@@ -259,7 +259,7 @@ CREATE TABLE Instruct(
 CREATE TABLE Ratings(
     Student VARCHAR(255),
     Professor VARCHAR(255),
-    Rate REAL,
+    Rate Decimal,
     Comment VARCHAR(5000),
     PRIMARY KEY(Student, Professor),
     FOREIGN KEY(Student) REFERENCES Students(NetId) ON DELETE CASCADE,
