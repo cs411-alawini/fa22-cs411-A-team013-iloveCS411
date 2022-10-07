@@ -14,7 +14,7 @@ This is an entity regarding user login information, with three attributes.
 
 1. NetId: a unique identifier to distinguish between users. This should be a string attribute and primary key for this table. NetId will serve as the username for login page.
 2. Password: a string attribute, password for login the platform.
-3. UserType: a enumerate attribute with values `Student` or `Professor`. This is to identify whether the user is a student or professor.
+3. UserType: an enumerate attribute with values `Student` or `Professor`. This is to identify whether the user is a student or professor.
 
 This entity is designed according to the assumptions:
 1. Every user in this platform will have a unique NetId and cannot be modified, regradless of their identity (student or professor).
@@ -69,11 +69,48 @@ Section is the class that are arranged for a specific course. A section of the c
 One section belongs to a course. However, `Sections` here is not a weak entity because `CRN` itself is enough to uniquely identify a section. We will use relation `Consist` (shown below) to show the relation between courses and sections.
 
 There are a few other assumptions:
-1. Lectures will have a fixed schedule every week. There is no arrangement for a section to have lectures on Monday for one week and Tuesday for another. I believe the UIUC course system follows this as well.
+1. Lectures will have a fixed schedule every week. We believe the UIUC course system follows this as well.
 2. There will be no restrictions regarding section attributes other than the capacity and level restrictions. We do not have restrictions that are not mentioned in the attributes, such as prerequisits. 
 
+## Relations
 
+There are a total of 4 relations in our database design, which will addressed in details as follows:
 
+### 1. Enrollment (Students and Sections)
+
+`Enrollment` is a relation between `Students` and `Sections` to mark the course enrollments of each students. This relation will also have attributes regarding the academic performances, such as grades, credits and so on. The relation has the following attributes:
+1. Semester: a string attribute to identify the semester when students enrolled in the course, following the format of `<season>+<year>` (e.g. `fall22` or `spring21`).
+2. Grade: a string attribute to identify the grade students received for their courses. Usually this attributes is assigned either a letter grade (e.g. `A`, `B+`) or `None` (the instructors have not assigned a grade yet). 
+3. Credit: an integer to identify the credit students choose for their courses. This should be an integer that is listed in `AvaliableCredit` in the related section.
+
+This relation will be a **many-to-many** relation, since a student can enroll in multiple sections, and a section can hold multiple students. However, we do have restrictions based on the following assumptions:
+1. One student can only enroll in the same course (and of course the same section) once. This is to ensure that `NetId` and `CRN` combined can uniquely identify an enrollment record.
+2. Credit must be a positive integer. No half credit supported.
+3. Grades is preferred as letter grades, and only getting `D` or above will students earn their credits. However, we may use this attribute to hold some unexpected situations for their grades (e.g. Grade postponed). But these will not count when calculating GPA and students will not earn the credits for this section.
+
+### 2. Consist (Courses and Sections)
+
+This is a relation to represent different class arrangement (known as sections) of courses. This is a **many-to-one** relation
+for a section can only belong to one course, while a course can have multiple sections.
+
+The `Consist` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `CourseId`, the primary key of `Courses`, to `Sections` and add foreign key constraints.
+
+### 3. Instruct (Sections and Professors)
+
+This is a relation to identify the instructors of different sections. This is a **many-to-many** relation based on the following assumptions:
+1. The `Instruct` relation has nothing to do with `Courses`. When talking about instructors, we focus on `Sections`. In the course management page, professors can manage each section separately, even if they belong to the same course.
+2. One section can have multiple instructors. And one professor can instruct multiple sections.
+3. We only maintain information for current instructors of each section. That indicates for each `(NetId, CRN)` pair in `Instruct`, the professor will be shown in the information page for the section as a current instructor.
+
+### 4. Ratings (Students and Professors)
+
+Students can rate their professors, and the information will be stored as `Ratings` relation. This is a **many-to-many** relation. It has following attributes:
+1. Rate: a real number for the rating. It scales from 0 to 5.
+2. Comment: a long string attribute for detailed comments.
+
+It based on the following assumptions:
+1. Students can rate any number of professors and each professor can be rated by any number of students. However, one student can only leave one valid rating for one professor. This is to ensure that Student's `NetId` and Professor's `NetId` can uniquely identify one rating record.
+2. We will not set restrictions of leaving comments or rating any professors. However, we may show a message on the page when a student did not take any courses instructed by this professor they rated.
 
 
 ```mysql
@@ -147,7 +184,7 @@ CREATE TABLE Enrollments(
     CRN int,
     NetId VARCHAR(255),
     Semester VARCHAR(255),
-    Credit VarChar(255),
+    Credit int,
     Grade VARCHAR(255),
     PRIMARY KEY(NetId, CRN),
     FOREIGN KEY(CRN) REFERENCES Sections(CRN) ON DELETE CASCADE,
