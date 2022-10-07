@@ -112,6 +112,92 @@ It based on the following assumptions:
 1. Students can rate any number of professors and each professor can be rated by any number of students. However, one student can only leave one valid rating for one professor. This is to ensure that Student's `NetId` and Professor's `NetId` can uniquely identify one rating record.
 2. We will not set restrictions of leaving comments or rating any professors. However, we may show a message on the page when a student did not take any courses instructed by this professor they rated.
 
+## Relational Schema
+The database design will be converted into 8 tables.
+
+**1. UserInfo**
+
+```
+UserInfo(
+    NetId VARCHAR(255) [PK],
+    Password VARCHAR(255),
+    UserType ENUM('Student', 'Professor')
+)
+```
+
+**2. Students**
+```
+Students(
+    NetId VARCHAR(255) [PK],
+    Name VARCHAR(255),
+    Department VARCHAR(255),
+    Level ENUM('Grad', 'Undergrad')
+)
+```
+
+**3. Professors**
+```
+Professors(
+    NetId VARCHAR(255) [PK],
+    Name VARCHAR(255),
+    Department VARCHAR(255)
+)
+```
+
+**4. Courses** 
+```
+Courses(
+    CourseId VARCHAR(255) [PK],
+    Department VARCHAR(255),
+    Title VARCHAR(255),
+    Description VARCHAR(5000)
+)
+```
+
+**5. Sections**
+```
+Sections(
+    CRN int [PK],
+    LectureType VARCHAR(255),
+    AvaliableCredits VARCHAR(255),
+    Restrictions VARCHAR(255),
+    LectureTime VARCHAR(255),
+    Capacity int,
+    Location VARCHAR(255),
+    CourseId VARCHAR(255) [FK to Courses.CourseId]
+)
+```
+
+**6. Instruct**
+```
+Instruct(
+    Professor VARCHAR(255) [PK] [FK to Professors.NetId],
+    CRN int [PK] [FK to Sections.CRN]
+)
+```
+
+**7. Ratings**
+```
+Ratings(
+    Student VARCHAR(255) [PK] [FK to Students.NetId],
+    Professor VARCHAR(255) [PK] [FK to Professors.NetId],
+    Rate REAL,
+    Comment VARCHAR(5000)
+)
+```
+
+**8. Enrollments**
+```
+Enrollments(
+    CRN int [PK] [FK to Sections.CRN],
+    NetId VARCHAR(255) [PK] [FK to Students.NetId],
+    Semester VARCHAR(255),
+    Credit int,
+    Grade VARCHAR(255)
+)
+```
+
+## MySQL DDL commands
 
 ```mysql
 #Entities
@@ -164,7 +250,7 @@ CREATE TABLE Sections(
 #Relationships
 CREATE TABLE Instruct(
     Professor VARCHAR(255),
-    CRN int references Sections(CRN) ON DELETE CASCADE,
+    CRN int,
     PRIMARY KEY(Professor, CRN),
     FOREIGN KEY(Professor) REFERENCES Professors(NetId) ON DELETE CASCADE,
     FOREIGN KEY(CRN) REFERENCES Sections(CRN) ON DELETE CASCADE
