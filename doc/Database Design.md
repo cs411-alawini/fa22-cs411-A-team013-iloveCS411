@@ -166,6 +166,14 @@ And by applying `EXPLAIN ANALYZE`, it looks like this:
 
 <img width="1216" alt="Screen Shot 2022-10-21 at 4 10 43 PM" src="https://user-images.githubusercontent.com/59706446/197289519-f3f27cf7-59af-4a05-a1ea-4b13acae9c9b.png">
 
+Finally, I will drop the previous index, and add another index on CRN in Enrollments, since we need to matche the e.CRN and s.CRN in the query:
+
+<img width="425" alt="Screen Shot 2022-10-21 at 4 22 44 PM" src="https://user-images.githubusercontent.com/59706446/197290796-8912647e-7dbb-4140-bad8-8bdbe97f088c.png">
+
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+
+<img width="1328" alt="Screen Shot 2022-10-21 at 4 23 29 PM" src="https://user-images.githubusercontent.com/59706446/197290857-9e17de2e-a3a2-4638-8c89-b65c811f963e.png">
+
 
 
 For Query2,
