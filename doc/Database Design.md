@@ -139,6 +139,7 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 > **TODO**: 
 > 1. Use `EXPLAIN ANALYZE` to see query performance. **Save the screenshots or output of the commands**.
+
 For Query1,
 <img width="1368" alt="Screen Shot 2022-10-21 at 2 59 29 PM" src="https://user-images.githubusercontent.com/59706446/197279219-c60a90a6-c566-495f-9c55-739aee0229c3.png">
 
