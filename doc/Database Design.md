@@ -196,3 +196,11 @@ And by applying `EXPLAIN ANALYZE`, it looks like this:
 The cost of executing the code decreases, especially in the number of lines. That's because we use index to find only the records 
 that we are interested in, which reduces the overall time of the entire code.
 > You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
+
+For query 1, which involves Students, Sections, and Enrollments tables, we created an index on each table: Students(Department), Sections(CourseId), and Enrollments(CRN). 
+
+For first index, on Students(Department), we eliminated the need to scan the Students table on filtering conditions. The index helped us to find only the records that we want, instead of scanning through the entire Students table. From the screenshots above, you can see that the cost for the filtering step is reduced from (cost = 122.35 rows = 1201) to (cost = 46.85 rows = 401). By adding the index on Students(Department), we effectively improved the efficiency of the query. 
+
+For the second index, on Sections(CourseId), the results was not really changed. We were very lost on why this happened because we needed to perform a filtering on Sections(CourseId). Turns out CourseId is a foreign key, which is apparently automactically indexed upon DDL. Therefore, the index already existed, which meant the result was unchanged.
+
+For the third index, on Enrollments(CRN), the result was also unchanged, since CRN is a primary key and foreign key in Enrollments. This meant an index already exists. 
