@@ -139,10 +139,19 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 > **TODO**: 
 > 1. Use `EXPLAIN ANALYZE` to see query performance. **Save the screenshots or output of the commands**.
+For Query1,
+<img width="1368" alt="Screen Shot 2022-10-21 at 2 59 29 PM" src="https://user-images.githubusercontent.com/59706446/197279219-c60a90a6-c566-495f-9c55-739aee0229c3.png">
 
 For Query2,
 ![Q2_original_analyze](images/Q2_original_analyze.jpg)
+
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
+For Query1,
+Firstly, add index on CourseId on Sections, it looks like this:
+<img width="524" alt="Screen Shot 2022-10-21 at 2 59 36 PM" src="https://user-images.githubusercontent.com/59706446/197279394-81e22c8e-849b-4baa-acb6-9f9e39c9e0be.png">
+
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+<img width="1406" alt="Screen Shot 2022-10-21 at 2 59 45 PM" src="https://user-images.githubusercontent.com/59706446/197279491-ae286942-6895-4c35-854d-af5280a66cc6.png">
 
 
 For Query2,
