@@ -152,6 +152,10 @@ Secondly, drop the previous index and add index on Name in Students, it looks li
 ![Q2_result_index_Name](images/Q2_result_index_Name.png)
 And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Name](images/Q2_analyze_Name.png)
+Then, drop the previous index and add index on Department in Students, it looks like this:
+![Q2_result_index_Department](images/Q2_result_index_Department.png)
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+![Q2_analyze_Department](images/Q2_analyze_Department.png)
 > 3. Reason on why the performance change. Write down your analysis.
 >
 > You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
