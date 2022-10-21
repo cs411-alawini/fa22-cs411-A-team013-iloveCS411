@@ -127,9 +127,9 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 **The MySQL query is shown as follows:**
 
-```mysql
+
 ![Q2_code](images/Q2_code.jpg)
-```
+
 
 **The result of this query is shown as follows:**
 
