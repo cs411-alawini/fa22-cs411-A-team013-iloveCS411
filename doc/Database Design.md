@@ -148,6 +148,10 @@ Firstly, add index on Grade in Enrollments, it looks like this:
 ![Q2_result_index_Grade](Q2_result_index_Grade.png)
 And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Grade](images/Q2_analyze_Grade.png)
+Secondly, drop the previous index and add index on Name in Students, it looks like this:
+![Q2_result_index_Name](images/Q2_result_index_Name.png)
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+![Q2_analyze_Name](images/Q2_analyze_Name.png)
 > 3. Reason on why the performance change. Write down your analysis.
 >
 > You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
