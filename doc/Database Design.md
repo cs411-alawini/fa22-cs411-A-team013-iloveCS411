@@ -150,10 +150,11 @@ For Query2,
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
 
 For Query1,
-Firstly, add index on CourseId on Sections, it looks like this:
-
+Firstly, add index on Department in Students, since the original query required a table scan on Student(Department). it looks like this:
+<img width="487" alt="Screen Shot 2022-10-21 at 4 01 51 PM" src="https://user-images.githubusercontent.com/59706446/197288120-d51ed3ff-ae9f-439a-8fda-23ff12affc19.png">
 
 And by applying `EXPLAIN ANALYZE`, it looks like this:
+<img width="1275" alt="Screen Shot 2022-10-21 at 4 02 24 PM" src="https://user-images.githubusercontent.com/59706446/197288203-a7367de4-c22a-44ae-b93c-a7a4825831f3.png">
 
 
 
