@@ -113,13 +113,12 @@ Write a MySQL query to find all students in `CS` who take at least one course of
 
 **The MySQL query is shown as follows:**
 
-```mysql
-# TODO: Complete MySQL query
-```
+<img width="890" alt="Screen Shot 2022-10-21 at 2 01 32 PM" src="https://user-images.githubusercontent.com/59706446/197273432-f3233cdd-a293-4fae-8762-54a7ca819fec.png">
+
 
 **The result of this query is shown as follows:**
 
-> **TODO**: Insert screenshots of the first 15 rows of results.
+<img width="423" alt="Screen Shot 2022-10-21 at 2 16 43 PM" src="https://user-images.githubusercontent.com/59706446/197273541-c3d84c0e-4ac3-4c59-a9a4-8fa7369c3ca2.png">
 
 ## Query 2
 
