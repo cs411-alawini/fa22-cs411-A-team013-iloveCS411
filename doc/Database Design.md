@@ -120,9 +120,9 @@ Write a MySQL query to find all students in `CS` who take at least one course of
 
 <img width="423" alt="Screen Shot 2022-10-21 at 2 16 43 PM" src="https://user-images.githubusercontent.com/59706446/197273541-c3d84c0e-4ac3-4c59-a9a4-8fa7369c3ca2.png">
 
-## Query 2
+### Query 2
 
-Write a MySQL query to find all students who take 8 credits or more courses, and never fail (Not `F` in `Grade`) in any of the course they take. Return their `NetId`, `Name`, and total credits `totalCredits`.
+Write a MySQL query to find all students who take 8 credits or more courses, and never fail (`F` in `Grade`) in any of the course they take. Return their `NetId`, `Name`, and total credits `totalCredits`.
 
 **The MySQL query is shown as follows:**
 
@@ -137,19 +137,15 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 ## Indexing Analysis
 
-> **TODO**: 
-> 1. Use `EXPLAIN ANALYZE` to see query performance. **Save the screenshots or output of the commands**.
+### Query 1
 
-For Query1,
+Run `EXPLAIN ANALYZE` on the first query, and the output is shown as follows:
+
+
 <img width="1230" alt="Screen Shot 2022-10-21 at 3 59 18 PM" src="https://user-images.githubusercontent.com/59706446/197287788-e1d8eaa6-b335-4941-94b2-a55350eac269.png">
 
+Adding three types of indexes shown as follows:
 
-For Query2,
-![Q2_original_analyze](images/Q2_original_analyze.jpg)
-
-> 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
-
-For Query1,
 Firstly, add index on Department in Students, since the original query required a table scan on Student(Department). it looks like this:
 
 <img width="487" alt="Screen Shot 2022-10-21 at 4 01 51 PM" src="https://user-images.githubusercontent.com/59706446/197288120-d51ed3ff-ae9f-439a-8fda-23ff12affc19.png">
@@ -174,28 +170,11 @@ And by applying `EXPLAIN ANALYZE`, it looks like this:
 
 <img width="1328" alt="Screen Shot 2022-10-21 at 4 23 29 PM" src="https://user-images.githubusercontent.com/59706446/197290857-9e17de2e-a3a2-4638-8c89-b65c811f963e.png">
 
+Explain of the results:
 
-
-For Query2,
-Firstly, add index on Grade in Enrollments, it looks like this:
-![Q2_result_index_Grade](images/Q2_result_index_Grade.png)
-And by applying `EXPLAIN ANALYZE`, it looks like this:
-![Q2_analyze_Grade](images/Q2_analyze_Grade.png)
-Secondly, drop the previous index and add index on Name in Students, it looks like this:
-![Q2_result_index_Name](images/Q2_result_index_Name.png)
-
-
-
-  And by applying `EXPLAIN ANALYZE`, it looks like this:
-![Q2_analyze_Name](images/Q2_analyze_Name.png)
-Then, drop the previous index and add index on Department in Students, it looks like this:
-![Q2_result_index_Department](images/Q2_result_index_Department.png)
-And by applying `EXPLAIN ANALYZE`, it looks like this:
-![Q2_analyze_Department](images/Q2_analyze_Department.png)
-> 3. Reason on why the performance change. Write down your analysis.
 The cost of executing the code decreases, especially in the number of lines. That's because we use index to find only the records 
 that we are interested in, which reduces the overall time of the entire code.
-> You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
+
 
 For query 1, which involves Students, Sections, and Enrollments tables, we created an index on each table: Students(Department), Sections(CourseId), and Enrollments(CRN). 
 
@@ -204,3 +183,56 @@ For first index, on Students(Department), we eliminated the need to scan the Stu
 For the second index, on Sections(CourseId), the results was not really changed. We were very lost on why this happened because we needed to perform a filtering on Sections(CourseId). Turns out CourseId is a foreign key, which is apparently automactically indexed upon DDL. Therefore, the index already existed, which meant the result was unchanged.
 
 For the third index, on Enrollments(CRN), the result was also unchanged, since CRN is a primary key and foreign key in Enrollments. This meant an index already exists. 
+
+
+
+### Query 2
+
+Run `EXPLAIN ANALYZE` on the second query, and the output is shown as follows:
+
+
+![Q2_original_analyze](images/Q2_original_analyze.jpg)
+
+
+Adding three types of indexes shown as follows:
+
+
+Firstly, add index on Grade in Enrollments, it looks like this:
+
+![Q2_result_index_Grade](images/Q2_result_index_Grade.png)
+
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+
+![Q2_analyze_Grade](images/Q2_analyze_Grade.png)
+
+Secondly, drop the previous index and add index on Name in Students, it looks like this:
+
+![Q2_result_index_Name](images/Q2_result_index_Name.png)
+
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+
+![Q2_analyze_Name](images/Q2_analyze_Name.png)
+
+Then, drop the previous index and add index on Credit in Enrollments, it looks like this:
+
+![Q2_result_index_Department](images/Q2_result_index_Credit.png)
+
+And by applying `EXPLAIN ANALYZE`, it looks like this:
+
+![Q2_analyze_Department](images/Q2_analyze_Credit.png)
+
+
+Explain of the results:
+
+This query includes aggregation, sub-queries and join of tables. According to the results of the default indexes, the aggregation process creates a temporary table and perform loops in that table. We will discuss whether `HAVING` can be optimized like `WHERE` by creating indexes in the third part.
+
+We also notice that for table join and subquery, there are also index lookup process in the query for they are both filtering the foreign key `NetId` of table Enrollments.
+
+The first index added on Grade is intended to help decrease executing cost of finding `F`s in Enrollment records. The result shows a decrease of cost (from 0.43 to 0.25) mainly on the filter of `e2.Grade = 'F'`, by index lookup instead of scanning the whole table. 
+
+The second index does not help reducing cost since it is irrelavant to the query. 
+
+For the third index, we add index for `Credit` on `Enrollment`, which is used in `HAVING` clause as an aggregation filter. We find a difference inside the nested loop inner join from table scan to index scan, but the cost and actual time consumption hardly dropped. And more importantly, the filter of `totalCredit >=8` for the created temporary table is not affected by the index. This indicates that index created on one attributes will not affect its aggregation value in the temporary table.
+
+
+
