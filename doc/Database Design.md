@@ -145,7 +145,7 @@ For Query2,
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
 For Query2,
 Firstly, add index on Grade in Enrollments, it looks like this:
-![Q2_result_index_Grade](Q2_result_index_Grade.png)
+![Q2_result_index_Grade](images/Q2_result_index_Grade.png)
 And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Grade](images/Q2_analyze_Grade.png)
 Secondly, drop the previous index and add index on Name in Students, it looks like this:
