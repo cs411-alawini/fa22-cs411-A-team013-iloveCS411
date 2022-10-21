@@ -147,6 +147,7 @@ For Query2,
 ![Q2_original_analyze](images/Q2_original_analyze.jpg)
 
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
+
 For Query1,
 Firstly, add index on CourseId on Sections, it looks like this:
 <img width="524" alt="Screen Shot 2022-10-21 at 2 59 36 PM" src="https://user-images.githubusercontent.com/59706446/197279394-81e22c8e-849b-4baa-acb6-9f9e39c9e0be.png">
