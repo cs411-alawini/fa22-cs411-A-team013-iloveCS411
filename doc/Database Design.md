@@ -163,5 +163,6 @@ Then, drop the previous index and add index on Department in Students, it looks 
 And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Department](images/Q2_analyze_Department.png)
 > 3. Reason on why the performance change. Write down your analysis.
->
+The cost of executing the code decreases, especially in the number of lines. That's because we use index to find only the records 
+that we are interested in, which reduces the overall time of the entire code.
 > You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
