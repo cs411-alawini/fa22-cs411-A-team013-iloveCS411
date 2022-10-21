@@ -140,9 +140,12 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 > **TODO**: 
 > 1. Use `EXPLAIN ANALYZE` to see query performance. **Save the screenshots or output of the commands**.
+
 For Query2,
 ![Q2_original_analyze](images/Q2_original_analyze.jpg)
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
+
+
 For Query2,
 Firstly, add index on Grade in Enrollments, it looks like this:
 ![Q2_result_index_Grade](images/Q2_result_index_Grade.png)
@@ -150,6 +153,8 @@ And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Grade](images/Q2_analyze_Grade.png)
 Secondly, drop the previous index and add index on Name in Students, it looks like this:
 ![Q2_result_index_Name](images/Q2_result_index_Name.png)
+
+
 And by applying `EXPLAIN ANALYZE`, it looks like this:
 ![Q2_analyze_Name](images/Q2_analyze_Name.png)
 Then, drop the previous index and add index on Department in Students, it looks like this:
