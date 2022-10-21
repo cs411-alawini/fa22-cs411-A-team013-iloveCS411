@@ -133,7 +133,8 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 **The result of this query is shown as follows:**
 
-> **TODO**: Insert screenshots of the first 15 rows of results.
+![Q2 result of original code](images/Q2 result of original code.jpg)
+
 
 ## Indexing Analysis
 
