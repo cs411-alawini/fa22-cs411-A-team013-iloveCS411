@@ -140,7 +140,12 @@ Write a MySQL query to find all students who take 8 credits or more courses, and
 
 > **TODO**: 
 > 1. Use `EXPLAIN ANALYZE` to see query performance. **Save the screenshots or output of the commands**.
+> For Query2,
+![Q2_original_analyze](images/Q2_original_analyze.jpg)
 > 2. Add **3 different indexes** on the database, and re-analyze the performances. **Save the screenshots or output of the commands**.
+> For Query2,
+> Firstly, add index on Grade in Enrollments, it looks like this:
+![Q2 result_index_Grade](Q2 result_index_Grade.png)
 > 3. Reason on why the performance change. Write down your analysis.
 >
 > You can use the same indexing for analyzing both queries. But Note that both analysis should cover details of the requirements.
