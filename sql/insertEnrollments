@@ -1,6 +1,0 @@
-INSERT INTO Enrollments VALUES
-(34132, "csug0", "SP23", 3, "A"),
-(72415, "csug0", "SP23", 3, "A"),
-(47022, "csug0", "SP23", 3, "A"),
-(63523, "csug0", "SP23", 1, "A"),
-(66834, "csug0", "SP23", 1, "A"),
