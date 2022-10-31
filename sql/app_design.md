@@ -97,7 +97,18 @@ display schedule
 
 ### Function 6: Manage Course(Quit/Change Credit)
 
+**description:** For those courses whose grades are not determined, allow user to quit(drop) the course, or change credits.
+
+
+**interface**: display two buttons, or allow click on the "Credit" column to do changes. Buttons should be inactive once Grade is determined.
+
+> Just a deletion or update to the "Enrollments" table.
+
 ### Function 7: Rate Professor
+
+**description**: Allow user to rate the professor of the sections they take. 
+
+**interface**: Create a button for rating. Usually a window appears which allows users to choose a rating and leave comments. Once rating submitted, a tuple is added to `Rating` table.
 
 ## Page 4: Course Explorer
 
