@@ -1,0 +1,35 @@
+<!-- this is the main page of the website, displayed when first opening the site-->
+<!--part of the code from class repository-->
+<!DOCTYPE html> 
+<html>
+	<head>
+		<title>iCourse</title>
+	</head>
+	<body>
+		<h1>Welcome to the iCours!</h1>
+		<h2>Login to continue:</h2>
+		<form action="" method="post">
+			NetID:  <input type="text" name="netId" />
+			<br />
+			Password:  <input type="password" name="password" />
+			<br />
+			<input type="submit" name="login" value="Login" />
+		</form>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+				<ul class="flashes">
+					{% for m in messages %}
+						<li>{{ m }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
+		{% block body %}
+		{% endblock %}
+	</body>
+	<style>
+	h1 {text-align: center;}
+	h2 {text-align: center;}
+	form {text-align: center;}
+	</style>
+</html>
