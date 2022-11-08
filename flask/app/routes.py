@@ -8,3 +8,16 @@ def homepage():
     """ returns rendered homepage """
 
     return render_template("login.html")
+
+@app.route("/login", methods=['POST'])
+def login():
+    netId = request.form.get("netId")
+    password = request.form.get("password")
+    ret = db_helper.login(netId, password)
+    if ret == 2:
+        result = {'success': False, 'response': 'User Not Found (NetId: {})'.format(netId)}
+    elif ret == 3:
+        result = {'success': False, 'response': 'Password incorrect (NetId: {})'.format(netId)}
+    else:
+        result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
+    return jsonify(result)

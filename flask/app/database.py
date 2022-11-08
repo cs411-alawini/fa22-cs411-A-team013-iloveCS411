@@ -1,7 +1,21 @@
 """Defines all the functions related to the database"""
-'''
+
 from app import db
 
+def login(NetId, Password):
+    conn = db.connect()
+    results = conn.execute("SELECT * FROM UserInfo WHERE NetId='{}'".format(NetId)).fetchall()
+
+    if len(results) == 0:
+        return 2 # No User
+    true_pw = results[0][1]
+    user_type = results[0][2]
+    print(NetId, Password, true_pw, user_type, results[0][0], len(results))
+    if Password != true_pw:
+        return 3 # password failed
+    return 0 if user_type=='Student' else 1
+
+'''
 def fetch_todo() -> dict:
     """Reads all tasks listed in the todo table
 

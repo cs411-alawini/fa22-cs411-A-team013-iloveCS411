@@ -16,7 +16,7 @@ def init_connection_engine():
 
 
     # detect env local or gcp
-    '''
+    
     if os.environ.get('GAE_ENV') != 'standard':
         try:
             variables = load(open("app.yaml"), Loader=Loader)
@@ -39,10 +39,18 @@ def init_connection_engine():
     )
 
     return pool
-    '''
+    
+
+# 
+db = init_connection_engine()
+'''
+conn = db.connect()
+results = conn.execute("SELECT * FROM Professors p JOIN Instruct i ON (p.NetId = i.Professor) NATURAL JOIN Sections s NATURAL JOIN Courses c WHERE p.Name LIKE '%%Alawini%%';").fetchall()
+print([x for x in results])
+conn.close()
+'''
 
 app = Flask(__name__)
-#db = init_connection_engine()
 
 # To prevent from using a blueprint, we use a cyclic import
 # This also means that we need to place this import here
