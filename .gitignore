@@ -1,6 +1,7 @@
 flask/virtual_env
 .gitignore
 */.venv
+*/.venv2
 .idea
 */__pycache__
 *.pyc
