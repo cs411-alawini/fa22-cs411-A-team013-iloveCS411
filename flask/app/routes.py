@@ -34,7 +34,7 @@ def login():
         return redirect(url_for("student"))
     else: #wrong login credentials
         flash("Invalid netId or password!")
-        return render_template("login.html")
+        return redirect(url_for("homepage"))
 
 
 
@@ -67,4 +67,4 @@ def unlogger():
 		session.clear()
 		return render_template("logout.html")
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("homepage"))

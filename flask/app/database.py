@@ -5,14 +5,18 @@ from app import db
 def login(NetId, Password):
     conn = db.connect()
     results = conn.execute("SELECT * FROM UserInfo WHERE NetId='{}'".format(NetId)).fetchall()
-
+    print(results)
     if len(results) == 0:
         ret = 2 # No User
+        conn.close()
+        return ret
     true_pw = results[0][1]
     user_type = results[0][2]
     print(NetId, Password, true_pw, user_type, results[0][0], len(results))
     if Password != true_pw:
         ret = 3 # password failed
+        conn.close()
+        return ret
     ret = 0 if user_type=='Student' else 1
     conn.close()
     return ret
