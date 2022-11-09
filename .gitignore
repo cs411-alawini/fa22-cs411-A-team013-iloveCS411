@@ -1,1 +1,7 @@
 flask/virtual_env
+.gitignore
+*/.venv
+.idea
+*/__pycache__
+*.pyc
+*/.DS_Store
