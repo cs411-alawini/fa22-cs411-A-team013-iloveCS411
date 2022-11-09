@@ -30,13 +30,26 @@ def show_schedule(netId, semester):
     Output:
     -- schedule (list): each item of schedule is a tuple including course information
         CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade
-        e.g. [
-            [00001, 'CS999', 'Some Title', 'Lecture-Discussion', 'MON09:00am-10:15am', 'CIF 3039', 3, 'A'],
-            [12345, 'CS888', 'Another Title', 'Online Lectures', '', '', 4, 'B']
-        ]
+    ===============================================================================
+    e.g. 
+    Input: 'ruipeng4', 'FA22'
+    Output:
+    [
+        (35852, 'CS476', 'Program Verification', 'Lecture-Discussion', 'TUE09:30AM-10:45AM,THU09:30AM-10:45AM', 'Transportation Building 101', 3, 'A+'), 
+        (63293, 'CS447', 'Natural Language Processing', 'Online', '', 'None None', 4, 'A+'), 
+        (74468, 'CS441', 'Applied Machine Learning', 'Online Lecture', '', 'None None', 4, 'A+'), 
+        (75726, 'CS411', 'Database Systems', 'Lecture', 'MON03:30PM-04:45PM,WED03:30PM-04:45PM', 'Campus Instructional Facility 3039', 3, 'A+')
+    ]
     '''
-    raise NotImplementedError
-    return []
+    conn = db.connect()
+    query = "SELECT CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade \
+    FROM Enrollments NATURAL JOIN Sections NATURAL JOIN Courses \
+    WHERE NetId = '{}' AND semester = '{}'".format(netId, semester)
+    results = conn.execute(query).fetchall()
+    ret = [x for x in results]
+    conn.close()
+    print(ret)
+    return ret
 
 def drop(netId, CRN):
     '''
