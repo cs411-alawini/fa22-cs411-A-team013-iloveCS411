@@ -21,3 +21,35 @@ def login():
     else:
         result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
     return jsonify(result)
+    #after log in, determine if student account or prof account, then render the according home page
+
+
+#this is student home page
+@app.route("/student", methods=['POST'])
+def student():
+    netId = request.form.get("netId")
+    password = request.form.get("password")
+    ret = db_helper.login(netId, password)
+    if ret == 2:
+        result = {'success': False, 'response': 'User Not Found (NetId: {})'.format(netId)}
+    elif ret == 3:
+        result = {'success': False, 'response': 'Password incorrect (NetId: {})'.format(netId)}
+    else:
+        result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
+    return jsonify(result)
+
+#faculty home page
+@app.route("/faculty", methods=['POST'])
+def faculty():
+    netId = request.form.get("netId")
+    password = request.form.get("password")
+    ret = db_helper.login(netId, password)
+    if ret == 2:
+        result = {'success': False, 'response': 'User Not Found (NetId: {})'.format(netId)}
+    elif ret == 3:
+        result = {'success': False, 'response': 'Password incorrect (NetId: {})'.format(netId)}
+    else:
+        result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
+    return jsonify(result)
+
+
