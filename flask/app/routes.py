@@ -27,11 +27,15 @@ def login():
         result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
     return jsonify(result)
     '''
-    #after log in, determine if student account or prof account, then render the according home page (not for midterm)
-    if ret == 0: #success login
+    #after log in, determine if student account or prof account, then render the according home page (not for midterm demo)
+    if ret == 0: #success login for student
         flash("login successful")
         session["username"] = netId
         return redirect(url_for("student"))
+    elif ret == 1: #success login for faculty
+        flash("login successful")
+        session["username"] = netId
+        return redirect(url_for("faculty"))
     else: #wrong login credentials
         flash("Invalid netId or password!")
         return redirect(url_for("homepage"))
@@ -42,23 +46,17 @@ def login():
 @app.route("/student", methods=["GET", "POST"])
 def student():
     return render_template("student.html")
-    
+
+
 
 #faculty home page
 @app.route("/faculty", methods=['POST'])
 def faculty():
-    netId = request.form.get("netId")
-    password = request.form.get("password")
-    ret = db_helper.login(netId, password)
-    if ret == 2:
-        result = {'success': False, 'response': 'User Not Found (NetId: {})'.format(netId)}
-    elif ret == 3:
-        result = {'success': False, 'response': 'Password incorrect (NetId: {})'.format(netId)}
-    else:
-        result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
-    return jsonify(result)
+    #todo
+     return render_template("faculty.html")
 
 
+#log out page
 @app.route("/logout/")
 def unlogger():
 	# if logged in, log out, otherwise offer to log in
