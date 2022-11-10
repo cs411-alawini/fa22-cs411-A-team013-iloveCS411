@@ -6,24 +6,51 @@
     <script>
       async function getSearchResults() {
         const base_url = "http://127.0.0.1:5000";
+        let headers = document.createElement("tr");
+        headers.innerHTML = `<tr>
+            <th>CRN</th>
+            <th>Course Title</th>
+            <th>Lecture Time</th>
+            <th>Instructor</th>
+            <th>Dept</th>
+            <th>Credits</th>
+            <th>Ratings</th>
+            <th>Capacity</th>
+            <th>Options</th>
+          </tr>`;
+        var results;
+
         let search_results = document.getElementById("search_results");
-        const fetch_search_results = await fetch(base_url + "/search", {
+        var first_elem = search_results.firstElementChild;
+
+        while (first_elem) {
+          first_elem.remove();
+          first_elem = search_results.firstElementChild;
+        }
+        search_results.append(headers);
+        fetch(base_url + "/search", {
           method: "GET",
-        }).then((res) => {
-          return res;
-        });
-        console.log(fetch_search_results.json());
-        let table_row = document.createElement("tr");
-        table_row.innerHTML = `
-        			<td> ${fetch_search_results.CRN}</td>
-        			<td> ${"Intro to CS"}</td>
-              <td> ${"Teacher 1"}</td>
-        			<td> ${"MWF"}</td>
-        			<td> ${"CS"}</td>
-        			<td> ${"2"}</td>
-        			<td> ${"4.8"}</td>
-        			<td> ${"input"}</td>`;
-        search_results.append(table_row);
+        })
+          .then((resp) => resp.json())
+          .then((res) => {
+            console.log(res);
+            // Data will likely be a list of maps
+            for (i = 0; i < res.length; ++i) {
+              data = res[i];
+              let table_row = document.createElement("tr");
+              table_row.innerHTML = `
+        			<td> ${data.CRN}</td>
+        			<td> ${data.Title}</td>
+              <td> ${data.Time}</td>
+        			<td> ${data.Instructor}</td>
+        			<td> ${data.Dept}</td>
+        			<td> ${data.Credits}</td>
+        			<td> ${data.Ratings}</td>
+        			<td> ${data.Capacity}</td>
+              <td> ${data.Options}</td>`;
+              search_results.append(table_row);
+            }
+          });
       }
     </script>
     <title>iCourse</title>
@@ -33,18 +60,7 @@
     <button id="submit_search" onclick="getSearchResults()">Search</button>
 
     <div>
-      <table id="search_results">
-        <tr>
-          <th>CRN</th>
-          <th>Course Title</th>
-          <th>Lecture Time & Instructor</th>
-          <th>Dept</th>
-          <th>Credits</th>
-          <th>Ratings</th>
-          <th>Capacity</th>
-          <th>Options</th>
-        </tr>
-      </table>
+      <table id="search_results"></table>
     </div>
   </body>
   <style>
