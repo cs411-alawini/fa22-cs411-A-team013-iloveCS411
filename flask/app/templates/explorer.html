@@ -1,0 +1,61 @@
+<!-- this is the main page of the website, displayed when first opening the site-->
+<!--part of the code from class repository-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      async function getSearchResults() {
+        const base_url = "http://127.0.0.1:5000";
+        let search_results = document.getElementById("search_results");
+        const fetch_search_results = await fetch(base_url + "/search", {
+          method: "GET",
+        }).then((res) => {
+          return res;
+        });
+        console.log(fetch_search_results.json());
+        let table_row = document.createElement("tr");
+        table_row.innerHTML = `
+        			<td> ${fetch_search_results.CRN}</td>
+        			<td> ${"Intro to CS"}</td>
+              <td> ${"Teacher 1"}</td>
+        			<td> ${"MWF"}</td>
+        			<td> ${"CS"}</td>
+        			<td> ${"2"}</td>
+        			<td> ${"4.8"}</td>
+        			<td> ${"input"}</td>`;
+        search_results.append(table_row);
+      }
+    </script>
+    <title>iCourse</title>
+  </head>
+  <body>
+    <input id="search_field" type="text" name="query" />
+    <button id="submit_search" onclick="getSearchResults()">Search</button>
+
+    <div>
+      <table id="search_results">
+        <tr>
+          <th>CRN</th>
+          <th>Course Title</th>
+          <th>Lecture Time & Instructor</th>
+          <th>Dept</th>
+          <th>Credits</th>
+          <th>Ratings</th>
+          <th>Capacity</th>
+          <th>Options</th>
+        </tr>
+      </table>
+    </div>
+  </body>
+  <style>
+    h1 {
+      text-align: center;
+    }
+    h2 {
+      text-align: center;
+    }
+    form {
+      text-align: center;
+    }
+  </style>
+</html>
