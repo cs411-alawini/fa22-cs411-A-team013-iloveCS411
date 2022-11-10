@@ -21,3 +21,11 @@ def login():
     else:
         result = {'success': True, 'response': 'Login Success. Your NetId is {}, UserType {}.'.format(netId, 'Student' if ret==0 else 'Professor')}
     return jsonify(result)
+
+@app.route('/explorer')
+def explorer():
+    return render_template('explorer.html')
+
+@app.route('/search', methods=['POST'])
+def search():
+    return "OK", 200
