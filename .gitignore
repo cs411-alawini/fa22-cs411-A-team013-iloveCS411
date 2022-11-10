@@ -1,2 +1,10 @@
-
 flask/app/__pycache__/__init__.cpython-310.pyc
+flask/virtual_env
+.gitignore
+*/.venv
+*/.venv2
+.idea
+*/__pycache__
+*.pyc
+*/.DS_Store
+
