@@ -41,7 +41,6 @@ def login():
         return redirect(url_for("homepage"))
 
 
-
 #this is student home page
 @app.route("/student", methods=["GET", "POST"])
 def student():
@@ -66,3 +65,13 @@ def unlogger():
 		return render_template("logout.html")
 	else:
 		return redirect(url_for("homepage"))
+
+@app.route('explorer')
+def explorer():
+    return render_template('explorer.html')
+
+@app.route('search', methods=['POST'])
+def search():
+    # Temporary return msg. 
+    # TODO: call db_helper function to get list of search results, then return a JSON
+    return "OK", 200
