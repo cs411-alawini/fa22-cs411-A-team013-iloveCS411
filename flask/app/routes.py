@@ -66,11 +66,11 @@ def unlogger():
 	else:
 		return redirect(url_for("homepage"))
 
-@app.route('explorer')
+@app.route('/explorer')
 def explorer():
     return render_template('explorer.html')
 
-@app.route('search', methods=['POST'])
+@app.route('/search', methods=['POST'])
 def search():
     # Temporary return msg. 
     # TODO: call db_helper function to get list of search results, then return a JSON
