@@ -70,8 +70,9 @@ def unlogger():
 def explorer():
     return render_template('explorer.html')
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET'])
 def search():
     # Temporary return msg. 
     # TODO: call db_helper function to get list of search results, then return a JSON
-    return "OK", 200
+    data = [{'CRN': '10002', 'Title': 'Database Systems', 'Time': 'MW', 'Instructor': 'Abdu', 'Dept': 'CS', 'Credits': '3', 'Ratings': '5', 'Capacity': '40', 'Options': 'N/A' }]
+    return jsonify(data)
