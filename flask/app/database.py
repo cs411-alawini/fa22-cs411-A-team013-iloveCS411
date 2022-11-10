@@ -2,9 +2,11 @@
 
 from app import db
 
+DEFAULT_SEM = 'SP23'
+
 def login(NetId, Password):
     conn = db.connect()
-    results = conn.execute("SELECT * FROM UserInfo WHERE NetId='{}'".format(NetId)).fetchall()
+    results = conn.execute("SELECT * FROM UserInfo WHERE NetId='{}';".format(NetId)).fetchall()
     print(results)
     if len(results) == 0:
         ret = 2 # No User
@@ -30,7 +32,7 @@ def show_schedule(netId, semester):
     Output:
     -- schedule (list): each item of schedule is a tuple including course information
         CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade
-    ===============================================================================
+    =================================
     e.g. 
     Input: 'ruipeng4', 'FA22'
     Output:
@@ -44,7 +46,7 @@ def show_schedule(netId, semester):
     conn = db.connect()
     query = "SELECT CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade \
     FROM Enrollments NATURAL JOIN Sections NATURAL JOIN Courses \
-    WHERE NetId = '{}' AND semester = '{}'".format(netId, semester)
+    WHERE NetId = '{}' AND semester = '{}';".format(netId, semester)
     results = conn.execute(query).fetchall()
     ret = [x for x in results]
     conn.close()
@@ -95,20 +97,51 @@ def change_credit(netId, CRN, credit):
 def keyword_course_search(keyword):
     '''
     Given a keyword, search all relavant course information and return.
-        (Title contains keyword)
+        (Title contains keyword, case insensitive)
     Input:
     -- keyword (string): 
     Output:
     -- course_lst (list): a list, each item is a tuple of **course** information including
-        CourseId, Title, Department, Number of Sections, Enrolled Student number, Capacity
-        e.g. [
-            ['CS999', 'Some Title', 'CS', 3, 48, 50],
-            ['CS888', 'Another Title', 'CS', 4, 100, 100]
-        ]
-    PS: You may need to use GROUP BY and aggregation functions for this operation.
+        CourseId, Title, Department, Enrolled Student number, Capacity
+    ===========================
+    e.g.
+    Input: "data"
+    Output:
+    [
+        ('CS107', 'Data Science Discovery', 'CS', 0, 330), 
+        ('CS225', 'Data Structures', 'CS', 0, 2493), 
+        ('CS307', 'Modeling and Learning in Data Science', 'CS', 0, 75), 
+        ('CS411', 'Database Systems', 'CS', 0, 1586), 
+        ('CS412', 'Introduction to Data Mining', 'CS', 0, 600), 
+        ('CS511', 'Advanced Data Management', 'CS', 0, 93), 
+        ('CS512', 'Data Mining Principles', 'CS', 0, 150), 
+        ('ECE365', 'Data Science and Engineering', 'ECE', 0, 198), 
+        ('ECE471', 'Data Science Analytics using Probabilistic Graph Models', 'ECE', 0, 120), 
+        ('FIN550', 'Big Data Analytics in Finance for Predictive and Causal Analysis', 'FIN', 0, 196)
+    ]
+
     '''
-    raise NotImplementedError
-    return []
+    # raise NotImplementedError
+    conn = db.connect()
+    course_query = "SELECT CourseId, Department, Title\
+        FROM Courses\
+        WHERE upper(Title) LIKE '%%{}%%';".format(keyword.upper())
+    course_lst = conn.execute(course_query).fetchall()
+    res = []
+    for course in course_lst:
+        courseId = course[0]
+        department = course[1]
+        title = course[2]
+        cap_query = "SELECT SUM(Capacity) FROM Sections WHERE CourseId = '{}';".format(courseId)
+        capacity = conn.execute(cap_query).fetchall()[0][0]
+        num_query = "SELECT COUNT(*) FROM Enrollments \
+            WHERE CRN IN (SELECT CRN FROM Sections WHERE CourseId = '{}') \
+            AND Semester = '{}';".format(courseId, DEFAULT_SEM)
+        num_enrolled = conn.execute(num_query).fetchall()[0][0]
+        res.append((courseId, title, department, num_enrolled, int(capacity)))
+    conn.close()
+    print(res)
+    return res
 
 def show_sections(courseId):
     '''
@@ -117,14 +150,53 @@ def show_sections(courseId):
     -- CourseId (string):
     Output:
     -- section_lst (list): a list, each item is a tuple of **section** information including
-        CRN, Lecture Type, Lecture Time, Location, Avaliable Credits(list), Instructor Names(list), Enrolled Student Number, Capacity, Restrictions
-        e.g. [
-            [00001, 'Lecture-Discussion', 'MON09:00am-10:15am', 'CIF 3039', [3, 4], ['Anna John', 'Bob Keith'], 10, 15, '']
-        ]
-    PS: You may use several SEARCH queries and process the data
+        CRN, Lecture Type, Avaliable Credits, Lecture Time, Location, Instructor Names, Capacity, Restrictions
+    ============================
+    e.g. 
+    Input: "CS173"
+    Output:
+    [
+        (30102, 'Lecture', '3', 'TUE09:30AM-10:45AM,THU09:30AM-10:45AM', 'Campus Instructional Facility 3039', 'Cosman, Benjamin', '0/300', 'Grad cannot Enroll'), 
+        (40083, 'Lecture', '3', 'TUE03:30PM-04:45PM,THU03:30PM-04:45PM', 'Campus Instructional Facility 0027/1025', 'Cosman, Benjamin', '0/483', 'Grad cannot Enroll'), 
+        (72280, 'Lecture', '3', 'TUE09:30AM-10:45AM,THU09:30AM-10:45AM', 'Campus Instructional Facility 3039', 'Cosman, Benjamin', '0/300', 'Grad cannot Enroll'), 
+        (72281, 'Lecture', '3', 'TUE03:30PM-04:45PM,THU03:30PM-04:45PM', 'Campus Instructional Facility 0027/1025', 'Cosman, Benjamin', '0/483', 'Grad cannot Enroll')
+    ]
     '''
-    raise NotImplementedError
-    return []
+    # raise NotImplementedError
+    conn = db.connect()
+    query = "SELECT CRN, LectureType, AvaliableCredits, LectureTime, Location, Capacity, Restrictions \
+        FROM Sections \
+        WHERE CourseId = '{}';".format(courseId)
+    section_lst = conn.execute(query).fetchall()
+    res = []
+    for section in section_lst:
+        crn = section[0]
+        ltype = section[1]
+        credits = section[2]
+        time = section[3]
+        location = section[4]
+        instruct_query = "SELECT p.Name FROM Instruct i JOIN Professors p ON (i.Professor = p.NetId) WHERE i.CRN = {};".format(crn)
+        name_lst = conn.execute(instruct_query).fetchall()
+        instructors = ""
+        for i in range(len(name_lst)):
+            name = name_lst[i]
+            instructors += name[0]
+            if i < len(name_lst)-1:
+                instructors += "; "
+        num_query = "SELECT COUNT(*) FROM Enrollments WHERE CRN = {} AND Semester = '{}';".format(crn, DEFAULT_SEM)
+        num_enrolled = conn.execute(num_query).fetchall()[0][0]
+        capacity = str(num_enrolled)+"/"+str(section[5])
+        restrict_raw = section[6]
+        if restrict_raw == 'U':
+            restriction = "Undergrad cannot Enroll"
+        elif restrict_raw == 'G':
+            restriction = "Grad cannot Enroll"
+        else:
+            restriction = "No Level Restrictions"
+        res.append((crn, ltype, credits, time, location, instructors, capacity, restriction))
+    conn.close()
+    print(res)
+    return res
 
 def enroll(netId, CRN):
     '''
@@ -146,88 +218,3 @@ def student_search(condition):
     raise NotImplementedError
     return []
 
-'''
-def fetch_todo() -> dict:
-    """Reads all tasks listed in the todo table
-
-    Returns:
-        A list of dictionaries
-    """
-
-    conn = db.connect()
-    query_results = conn.execute("Select * from tasks;").fetchall()
-    conn.close()
-    todo_list = []
-    for result in query_results:
-        item = {
-            "id": result[0],
-            "task": result[1],
-            "status": result[2]
-        }
-        todo_list.append(item)
-
-    return todo_list
-
-
-def update_task_entry(task_id: int, text: str) -> None:
-    """Updates task description based on given `task_id`
-
-    Args:
-        task_id (int): Targeted task_id
-        text (str): Updated description
-
-    Returns:
-        None
-    """
-
-    conn = db.connect()
-    query = 'Update tasks set task = "{}" where id = {};'.format(text, task_id)
-    conn.execute(query)
-    conn.close()
-
-
-def update_status_entry(task_id: int, text: str) -> None:
-    """Updates task status based on given `task_id`
-
-    Args:
-        task_id (int): Targeted task_id
-        text (str): Updated status
-
-    Returns:
-        None
-    """
-
-    conn = db.connect()
-    query = 'Update tasks set status = "{}" where id = {};'.format(text, task_id)
-    conn.execute(query)
-    conn.close()
-
-
-def insert_new_task(text: str) ->  int:
-    """Insert new task to todo table.
-
-    Args:
-        text (str): Task description
-
-    Returns: The task ID for the inserted entry
-    """
-
-    conn = db.connect()
-    query = 'Insert Into tasks (task, status) VALUES ("{}", "{}");'.format(
-        text, "Todo")
-    conn.execute(query)
-    query_results = conn.execute("Select LAST_INSERT_ID();")
-    query_results = [x for x in query_results]
-    task_id = query_results[0][0]
-    conn.close()
-
-    return task_id
-
-
-def remove_task_by_id(task_id: int) -> None:
-    """ remove entries based on task ID """
-    conn = db.connect()
-    query = 'Delete From tasks where id={};'.format(task_id)
-    conn.execute(query)
-    conn.close()
-'''
