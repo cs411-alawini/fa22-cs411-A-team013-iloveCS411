@@ -103,7 +103,8 @@ def explorer():
 @app.route('/search', methods=['POST'])
 def search():
     input = request.get_json()['keyword']
-    data = db_helper.keyword_course_search(input)
+    filters = request.get_json()['filters']
+    data = db_helper.keyword_course_search(input, filters)
     return jsonify(data)
 
 @app.route('/getSections', methods=['POST'])
