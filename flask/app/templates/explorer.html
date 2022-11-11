@@ -109,7 +109,7 @@
               <td> ${data[5]}</td>
               <td> ${data[6]}</td>
               <td> ${data[7]}</td>
-              <td> <button onClick="enroll(data[0])"> Enroll </button></td>`;
+              <td> <button value=${data[0]} onClick="enroll(this.value)"> Enroll </button></td>`;
               section_results.append(table_row);
             }
           });

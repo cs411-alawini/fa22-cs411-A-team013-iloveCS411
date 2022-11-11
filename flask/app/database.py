@@ -301,10 +301,12 @@ def enroll(netId, CRN):
     result2 = conn.execute(query2).fetchall()
     if result1[0][0] == "Undergrad" and result2[0][0].find("U") != -1:
         ret = 1 # it has restriction to this student
+        print("Restrictions.")
         conn.close()
         return ret
     elif result1[0][0] == "Grad" and result2[0][0].find("G") != -1:
         ret = 1 # it has restriction to this student
+        print("Restrictions.")
         conn.close()
         return ret
     query3 = "SELECT COUNT(NetId) FROM Enrollments WHERE CRN = {} AND Semester = '{}';".format(CRN, DEFAULT_SEM)
@@ -313,12 +315,14 @@ def enroll(netId, CRN):
     result4 = conn.execute(query4).fetchall()
     if 1 + result3[0][0] > result4[0][0]:
         ret = 2 # it exceeds the capacity
+        print("Capacity.", result3[0][0], result4[0][0])
         conn.close()
         return ret
     query5 = "SELECT CRN FROM Enrollments WHERE CRN = {} AND NetId = '{}';".format(CRN, netId)
     result5 = conn.execute(query5).fetchall()
     if len(result5) != 0:
         ret = 3 # the student has enrolled in this class before
+        print("Enrolled.")
         conn.close()
         return ret
     cr = min_credit(result4[0][1])
