@@ -79,9 +79,18 @@ def unlogger():
 def explorer():
     return render_template('explorer.html')
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['POST'])
 def search():
     # Temporary return msg. 
     # TODO: call db_helper function to get list of search results, then return a JSON
-    data = [{'CRN': '10002', 'Title': 'Database Systems', 'Time': 'MW', 'Instructor': 'Abdu', 'Dept': 'CS', 'Credits': '3', 'Ratings': '5', 'Capacity': '40', 'Options': 'N/A' }]
+    input = request.get_json()['keyword']
+    data = db_helper.keyword_course_search(input)
+    return jsonify(data)
+
+@app.route('/getSections', methods=['POST'])
+def getSections():
+    # Temporary return msg. 
+    # TODO: call db_helper function to get list of search results, then return a JSON
+    input = request.get_json()['section']
+    data = db_helper.show_sections(input)
     return jsonify(data)
