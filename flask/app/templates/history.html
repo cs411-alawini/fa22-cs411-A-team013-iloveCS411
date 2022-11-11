@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Student home</title>
+		<title>Course History</title>
 	</head>
 	<body>
-		<h1>Welcome back {% if "username" in session %} {{session["username"]}} !{% endif %}</h1>
-		{% if "username" in session %}
-			Logged in as {{ session["username"] }}
-			<br /><br /><br />
-		{% endif %}
 		</ul>
         <div class="topnav">
-            <a class="active" href="{{ url_for("student") }}">Manage Schedule</a>
+            <a href="{{ url_for("student") }}">Manage Schedule</a>
             <a href="{{ url_for("explorer") }}">Course Explorer</a>
-            <a href="{{ url_for("history") }}">Course History</a>
+            <a class="active" href="{{ url_for("history") }}">Course History</a>
             <a href="{{ url_for("unlogger")}}">Logout</a>
         </div>
 

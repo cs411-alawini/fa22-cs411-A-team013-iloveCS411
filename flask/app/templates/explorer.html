@@ -59,7 +59,7 @@
     <div class="topnav">
       <a href="{{ url_for("student") }}">Manage Schedule</a>
       <a class="active" href="{{ url_for("explorer") }}">Course Explorer</a>
-      <a href="Not_Implemented">Past Courses</a>
+      <a href="{{ url_for("history") }}">Course History</a>
       <a href="{{ url_for("unlogger")}}">Logout</a>
   </div><br /><br /><br />
     <input id="search_field" type="text" name="query" />
