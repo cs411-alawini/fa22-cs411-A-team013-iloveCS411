@@ -57,8 +57,8 @@
 
                     <td>
                     <form action="{{ url_for('update_cred', crn = entry[0]) }}" method="POST">
-                        <input type="text" name="new_cred" value="Enter new credit" />
-                        <a class = 'button' type = 'submit' href="{{ url_for('update_cred', crn = entry[0]) }}" >Update Credit</a>
+                        <input type="text" name="new_cred" placeholder="Enter new credit" />
+                        <input class = 'button' type = 'submit' value = 'Update Credit' ></input>
                     </form>
                     </td>
 
