@@ -31,15 +31,23 @@
         section_results = document.createElement('table');
         section_results.id = "section_results";
         section_results_holder.append(section_results);
-
         search_results.append(headers);
+        var filters = null;
+        var dept = document.getElementById('Department')
+        if (dept.value == "None")
+          filters = []
+        else
+          filters = [dept.value]
+        var min_credit = document.getElementById('minimumcredits');
+        if (!isNaN(min_credit.value))
+          filters.push(min_credit.value)
         fetch(base_url + "/search", {
           method: "POST",
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           },
-        body:JSON.stringify({'keyword': keyword})
+        body:JSON.stringify({'keyword': keyword, 'filters': filters})
         })
           .then((resp) => resp.json())
           .then((res) => {
@@ -145,14 +153,49 @@
       <a href="{{ url_for("history") }}">Course History</a>
       <a href="{{ url_for("unlogger")}}">Logout</a>
   </div><br /><br /><br />
-    <input id="search_field" type="text" name="query" />
-    <button id="submit_search" onclick="getSearchResults()">Search</button>
-  <div id="netid" value={{session["username"]}}> </div>
-    <div>
-      <table id="search_results"></table>
+
+
+  <div style="display:flex; flex-direction: column;" id="netid" value={{session["username"]}}> 
+    <div style="margin: auto; "> 
+      <input  id="search_field" type="text" name="query" />
+      <button " id="submit_search" onclick="getSearchResults()">Search</button>
     </div>
-    <div id="section_results_holder">
-      <table id="section_results"></table>
+    <div style="margin: auto; display: flex; flex-direction: row;">
+      <div style="display: flex; flex-direction: column;">
+        <div>
+          <h3> Filters</h3>
+          <label for="Dept">Department:</label>
+          <select name="Dept" id="Department">
+            <option value="None">N/A</option>
+            <option value="CS">CS</option>
+            <option value="ECE">ECE</option>
+            <option value="MATH">MATH</option>
+            <option value="STAT">STAT</option>
+          </select>
+        </div>
+        <div>
+          <label for="min_credits">Min Credits</label>
+          <input style="width: 20px;"id="minimumcredits" type="text" name="min_credit_field"/>
+        </div>
+
+      </div>   
+      <table id="search_results">
+        <tr>
+          <th>CRN</th>
+          <th>Course Title</th>
+          <th>Dept</th>
+          <th>Enrolled</th>
+          <th>Capacity</th>
+          <th>Options</th>
+        </tr>
+      </table>
+    </div>
+    <div style="margin: auto;" id="section_results_holder">
+      <table id="section_results">
+
+      </table>
+      
+    </div>
     </div>
   </body>
   <style>
@@ -165,6 +208,7 @@
     form {
       text-align: center;
     }
+
 
     /* Add a black background color to the top navigation */
     .topnav {
