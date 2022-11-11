@@ -171,7 +171,7 @@ def change_credit(netId, CRN, credit):
     conn.close()
     return 0
 
-def keyword_course_search(keyword):
+def keyword_course_search(keyword, filter):
     '''
     Given a keyword, search all relavant course information and return.
         (Title contains keyword, case insensitive)
@@ -199,18 +199,41 @@ def keyword_course_search(keyword):
 
     '''
     # raise NotImplementedError
+    if len(filter) == 1:
+        cre = int(filter[0]) if filter[0] != "" else None
+        dept = None
+    else:
+        cre = int(filter[1]) if filter[1] != "" else None
+        dept = filter[0]
     conn = db.connect()
     course_query = "SELECT CourseId, Department, Title\
         FROM Courses\
-        WHERE upper(Title) LIKE '%%{}%%';".format(keyword.upper())
+        WHERE upper(Title) LIKE '%%{}%%'".format(keyword.upper())
+    if dept is not None:
+        course_query += " AND Department = '{}';".format(dept)
+    else:
+        course_query += ";"
     course_lst = conn.execute(course_query).fetchall()
+    # print(len(course_lst))
     res = []
     for course in course_lst:
         courseId = course[0]
+        if cre is not None:
+            cre_query = "SELECT AvaliableCredits FROM Sections WHERE courseId = '{}';".format(courseId)
+            credits = conn.execute(cre_query).fetchall()
+            found = False
+            for credit in credits:
+                prompt = credit[0]
+                if credit_avail(prompt, cre):
+                    found = True
+                    break
+            if not found:
+                continue
         department = course[1]
         title = course[2]
         cap_query = "SELECT SUM(Capacity) FROM Sections WHERE CourseId = '{}';".format(courseId)
         capacity = conn.execute(cap_query).fetchall()[0][0]
+        # print(courseId, capacity)
         num_query = "SELECT COUNT(*) FROM Enrollments \
             WHERE CRN IN (SELECT CRN FROM Sections WHERE CourseId = '{}') \
             AND Semester = '{}';".format(courseId, DEFAULT_SEM)
@@ -332,7 +355,50 @@ def enroll(netId, CRN):
     conn.close()
     return 0
 
+def generate_query(dept, enrolled, mincre, nof):
+    query1 = "SELECT NetId, Name, Department, SUM(Credit) as TotalCredits \
+            FROM Students s NATURAL JOIN Enrollments e \
+            WHERE True "
+    if dept is not None:
+        query1 += "AND Department = '{}' ".format(dept)
+    if enrolled is not None:
+        query1 += "AND NetId IN ( \
+            SELECT NetId FROM Enrollments e NATURAL JOIN Sections s \
+            WHERE CourseId LIKE '{}%%' ) ".format(enrolled)
+    if nof:
+        query1 += "AND NetId NOT IN ( \
+            SELECT NetId FROM Enrollments WHERE Grade = 'F') "
+    query1 += "GROUP BY NetId HAVING TotalCredits >= {}".format(mincre)
+    return query1
+
 def student_search(condition):
-    raise NotImplementedError
-    return []
+    Dept1 = condition['Dept1'] if condition['Dept1'] != '' else None
+    Dept2 = condition['Dept2'] if condition['Dept2'] != '' else None
+    Enrolled1 = condition['Enrolled1'] if condition['Enrolled1'] != '' else None
+    Enrolled2 = condition['Enrolled2'] if condition['Enrolled2'] != '' else None
+    MinCre1 = int(condition['Mincredit1'])
+    MinCre2 = int(condition['Mincredit2'])
+    NoF1 = 'NoF1' in condition
+    NoF2 = 'NoF2' in condition
+    if Dept1 is None and Enrolled1 is None and MinCre1 == 0 and not NoF1:
+        condition1 = False
+    else:
+        condition1 = True
+    if Dept2 is None and Enrolled2 is None and MinCre2 == 0 and not NoF2:
+        condition2 = False
+    else:
+        condition2 = True
+    if not condition1 and not condition2:
+        print("No Condition Found.")
+        return []
+    query1 = generate_query(Dept1, Enrolled1, MinCre1, NoF1) if condition1 else ""
+    query2 = generate_query(Dept2, Enrolled2, MinCre2, NoF2) if condition2 else ""
+    union = "UNION" if condition1 and condition2 else ""
+    
+    query = query1 + " " + union + " " + query2 + " ORDER BY NetId;"
+    conn = db.connect()
+    lst = conn.execute(query)
+    ret = [x for x in lst]
+    conn.close()
+    return ret
 

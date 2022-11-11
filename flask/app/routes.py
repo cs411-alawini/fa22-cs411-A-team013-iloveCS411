@@ -79,10 +79,15 @@ def history():
 
 
 #faculty home page
-@app.route("/faculty", methods=['POST'])
+@app.route("/faculty", methods=['GET', 'POST'])
 def faculty():
     #todo
-    return render_template("faculty.html")
+    return render_template("adv_query.html", ret=[])
+
+@app.route("/find_student", methods=['GET', 'POST'])
+def find_student():
+    data = db_helper.student_search(request.form)
+    return render_template("adv_query.html", ret=data)
 
 
 #log out page
@@ -104,6 +109,7 @@ def explorer():
 def search():
     input = request.get_json()['keyword']
     filters = request.get_json()['filters']
+    print(input, filters)
     data = db_helper.keyword_course_search(input, filters)
     return jsonify(data)
 

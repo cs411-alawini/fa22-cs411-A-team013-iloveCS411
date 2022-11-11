@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Professor home</title>
+	</head>
+
+	<body>
+		<h1>Welcome back {% if "username" in session %} {{session["username"]}} !{% endif %}</h1>
+		{% if "username" in session %}
+			Logged in as {{ session["username"] }}
+			<br /><br /><br />
+		{% endif %}
+		</ul>
+        <div class="topnav">
+            <a class="active" href="{{ url_for("faculty") }}">Find Potential Students</a>
+            <a href="{{ url_for("unlogger")}}">Logout</a>
+        </div>
+        <br /><br />
+
+        <form action="/find_student" method="post">
+            Condition 1: 
+			Department: <select name="Dept1" id="Department1">
+                <option value="">N/A</option>
+                <option value="CS">CS</option>
+                <option value="ECE">ECE</option>
+                <option value="MATH">MATH</option>
+                <option value="ENG">ENG</option>
+                <option value="FIN">FIN</option>
+            </select>
+			
+			Enrolled: <select name="Enrolled1" id="Enrolled1">
+                <option value="">N/A</option>
+                <option value="CS">CS</option>
+                <option value="ECE">ECE</option>
+                <option value="MATH">MATH</option>
+                <option value="ENG">ENG</option>
+                <option value="FIN">FIN</option>
+            </select>
+			
+            Min Credit: <input type="number" name="Mincredit1" id="Mincredit1" value="0" />
+            
+            Never Fail: <input type="checkbox" id="NoF1" name="NoF1" value="Yes">
+            <br />
+            Condition 2:
+            Department: <select name="Dept2" id="Department2">
+                <option value="">N/A</option>
+                <option value="CS">CS</option>
+                <option value="ECE">ECE</option>
+                <option value="MATH">MATH</option>
+                <option value="ENG">ENG</option>
+                <option value="FIN">FIN</option>
+            </select>
+			
+			Enrolled: <select name="Enrolled2" id="Enrolled2">
+                <option value="">N/A</option>
+                <option value="CS">CS</option>
+                <option value="ECE">ECE</option>
+                <option value="MATH">MATH</option>
+                <option value="ENG">ENG</option>
+                <option value="FIN">FIN</option>
+            </select>
+			
+            Min Credit: <input type="number" name="Mincredit2" id="Mincredit2", value="0" />
+            
+            Never Fail: <input type="checkbox" id="NoF2" name="NoF2" value="Yes">
+            <br />
+
+			<input type="submit" name="search" value="Search" />
+		</form>
+
+        {% block content %}
+            <table id="potential_student" class="pst_table">
+            <thead>
+                <tr>
+                    <th>NetId</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Total Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in ret %}
+                <tr>
+                    <td>{{ entry[0] }}</td>
+                    <td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }}</td>
+                    <td>{{ entry[3] }}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% endblock %}
+
+	</body>
+    <style>
+        /* Add a black background color to the top navigation */
+        .topnav {
+        background-color: #333;
+        overflow: hidden;
+        }
+
+        /* Style the links inside the navigation bar */
+        .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        }
+
+        /* Change the color of links on hover */
+        .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+        }
+
+        /* Add a color to the active/current link */
+        .topnav a.active {
+        background-color: #04AA6D;
+        color: white;
+        }
+
+        table {
+            border: 1px solid;
+            width: 100%;
+        }
+
+        table.course_table tr td { font-size: 15px; }
+
+        .button{
+        background-color: #2a609a;
+            width: 100px;
+            height: 60px;
+        color: white;
+        outline: none;
+        font-size: 18px;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        }
+
+        .block-display button{
+        margin-bottom:10px;
+        display:block;
+        }
+
+        .button:hover{
+        background-color: #32CD32;
+        font-size: 18px;
+        transition: 0.5s;
+        white-space: nowrap;
+        }
+
+        input[type="text"] {
+            width: 100px;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+    
+</html>
