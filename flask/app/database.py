@@ -142,21 +142,26 @@ def change_credit(netId, CRN, credit):
         return 3: Invalid: The input credit is not avaliable for this course
     '''
     conn = db.connect()
+    print(netId, CRN, credit)
+    credit = int(credit)
     query1 = "SELECT CRN, Grade FROM Enrollments WHERE NetId = '{}' AND CRN = {};".format(netId,CRN)
     result1 = conn.execute(query1).fetchall()
     #print(result1)
     if len(result1) == 0:
         ret = 1 # the CRN is not enrolled by the student
+        print("CRN not found in Enrollments")
         conn.close()
         return ret
     if result1[0][1] != None:
         ret = 2 # a Grade is already granted for the course
+        print("Grade already granted")
         conn.close()
         return ret
     query3 = "SELECT AvaliableCredits FROM Sections WHERE CRN = {};".format(CRN)
     result3 = conn.execute(query3).fetchall()
     prompt = result3[0][0]
     if not credit_avail(prompt, credit):
+        print("Credit not avaliable.")
         ret = 3
         conn.close()
         return ret
