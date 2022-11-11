@@ -66,12 +66,58 @@ def drop(netId, CRN):
     Operation:
         1. Check if the course can be dropped.
         2. If the course can be dropped, delete it from Enrollment, return 0 (success)
-        3. Else, prevent the drop and return an error code (e.g. 1 for course not found, 2 for invalid drop, ... you can define for yourself)
+        3. Else, prevent the drop and return an error code 
     Output:
     -- return value (int): indicating dropping successful or not.
+        return 0: Drop success.
+        return 1: Invalid, the given CRN is not enrolled by the student.
+        return 2: Invalid, a grade is already asserted, cannot drop at this stage.
     '''
-    raise NotImplementedError
-    return -1
+    conn = db.connect()
+    query1 = "SELECT CRN, Grade FROM Enrollments WHERE NetId = '{}' AND CRN = {};".format(netId,CRN)
+    result1 = conn.execute(query1).fetchall()
+    #print(result1)
+    if len(result1) == 0:
+        ret = 1 # the CRN is not enrolled by the student
+        conn.close()
+        return ret
+    if result1[0][1] != None:
+        ret = 2 # a Grade is already granted for the course
+        conn.close()
+        return ret
+    
+    del_query = "DELETE FROM Enrollments \
+        WHERE NetId = '{}' AND CRN = {};".format(netId, CRN)
+    conn.execute(del_query)
+    print("delete success!")
+    conn.close()
+    return 0
+
+def credit_avail(prompt, credit):
+    if prompt.find(",") != -1:
+        lst = prompt.strip().split(",")
+        low = int(lst[0])
+        high = int(lst[1])
+        return credit == low or credit == high
+    elif prompt.find("-") != -1:
+        lst = prompt.strip().split("-")
+        low = int(lst[0])
+        high = int(lst[1])
+        return credit >= low and credit <= high
+    else:
+        return credit == int(prompt.strip())
+
+def min_credit(prompt):
+    if prompt.find(",") != -1:
+        lst = prompt.strip().split(",")
+        low = int(lst[0])
+        return low
+    elif prompt.find("-") != -1:
+        lst = prompt.strip().split("-")
+        low = int(lst[0])
+        return low
+    else:
+        return int(prompt.strip())
 
 def change_credit(netId, CRN, credit):
     '''
@@ -90,9 +136,35 @@ def change_credit(netId, CRN, credit):
         3. Else, prevent the update and return an error code (e.g. 1 for course not found, 2 for invalid update, ... you can define for yourself)
     Output:
     -- return value (int): indicating update successful or not.
+        return 0: Update Success
+        return 1: Invalid: No enrollment records found for this student given CRN
+        return 2: Invalid: A grade is already asserted and cannot update at this stage
+        return 3: Invalid: The input credit is not avaliable for this course
     '''
-    raise NotImplementedError
-    return -1
+    conn = db.connect()
+    query1 = "SELECT CRN, Grade FROM Enrollments WHERE NetId = '{}' AND CRN = {};".format(netId,CRN)
+    result1 = conn.execute(query1).fetchall()
+    #print(result1)
+    if len(result1) == 0:
+        ret = 1 # the CRN is not enrolled by the student
+        conn.close()
+        return ret
+    if result1[0][1] != None:
+        ret = 2 # a Grade is already granted for the course
+        conn.close()
+        return ret
+    query3 = "SELECT AvaliableCredits FROM Sections WHERE CRN = {};".format(CRN)
+    result3 = conn.execute(query3).fetchall()
+    prompt = result3[0][0]
+    if not credit_avail(prompt, credit):
+        ret = 3
+        conn.close()
+        return ret
+    query4 = "UPDATE Enrollments SET Credit = {} WHERE NetId = '{}' AND CRN = {};".format(credit,netId,CRN)
+    conn.execute(query4)
+    print("update success.")
+    conn.close()
+    return 0
 
 def keyword_course_search(keyword):
     '''
@@ -210,9 +282,46 @@ def enroll(netId, CRN):
     - CRN (int)
     Output
     -- return value (int): indicating insert successful or not.
+        return 0: Enroll Success
+        return 1: Invalid. Level Restrictions prevent enrollment.
+        return 2: Invalid. Exceed Capacity.
+        return 3: Invalid. Already enrolled in this section.
     '''
-    raise NotImplementedError
-    return -1
+    #raise NotImplementedError
+    #return -1 
+    conn = db.connect()
+    query1 = "SELECT Level FROM Students WHERE NetId = '{}';".format(netId)
+    query2 = "SELECT Restrictions FROM Sections WHERE CRN = {};".format(CRN)
+    result1 = conn.execute(query1).fetchall()
+    result2 = conn.execute(query2).fetchall()
+    if result1[0][0] == "Undergrad" and result2[0][0].find("U") != -1:
+        ret = 1 # it has restriction to this student
+        conn.close()
+        return ret
+    elif result1[0][0] == "Grad" and result2[0][0].find("G") != -1:
+        ret = 1 # it has restriction to this student
+        conn.close()
+        return ret
+    query3 = "SELECT COUNT(NetId) FROM Enrollments WHERE CRN = {} AND Semester = '{}';".format(CRN, DEFAULT_SEM)
+    query4 = "SELECT Capacity, AvaliableCredits FROM Sections WHERE CRN = {};".format(CRN)
+    result3 = conn.execute(query3).fetchall()
+    result4 = conn.execute(query4).fetchall()
+    if 1 + result3[0][0] > result4[0][0]:
+        ret = 2 # it exceeds the capacity
+        conn.close()
+        return ret
+    query5 = "SELECT CRN FROM Enrollments WHERE CRN = {} AND NetId = '{}';".format(CRN, netId)
+    result5 = conn.execute(query5).fetchall()
+    if len(result5) != 0:
+        ret = 3 # the student has enrolled in this class before
+        conn.close()
+        return ret
+    cr = min_credit(result4[0][1])
+    query6 = "INSERT INTO Enrollments (CRN, NetId, Semester, Credit) VALUES ({}, '{}', '{}', {});".format(CRN,netId,DEFAULT_SEM,cr)
+    conn.execute(query6)
+    print("insert success.")
+    conn.close()
+    return 0
 
 def student_search(condition):
     raise NotImplementedError
