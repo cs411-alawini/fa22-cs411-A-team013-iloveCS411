@@ -73,6 +73,7 @@
             <th>Instructor Names</th>
             <th>Capacity</th>
             <th>Restrictions</th>
+            <th>Action</th>
           </tr>`;
         var results;
         let section_results = document.getElementById("section_results");
@@ -106,10 +107,23 @@
         			<td> ${data[4]}</td>
               <td> ${data[5]}</td>
               <td> ${data[6]}</td>
-              <td> <button> ${"Enroll"} </button></td>`;
+              <td> ${data[7]}</td>
+              <td> <button onClick="enroll(session['username'], data[0])"> Enroll </button></td>`;
               section_results.append(table_row);
             }
           });
+      }
+      function enroll(netid, CRN) {
+        const base_url = "http://127.0.0.1:5000";
+        console.log(sessionStorage)
+        fetch(base_url + "/getSections", {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body:JSON.stringify({'netid': netid, 'CRN': CRN})
+        })
       }
     </script>
     <title>iCourse</title>
