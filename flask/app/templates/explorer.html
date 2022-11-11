@@ -10,11 +10,8 @@
         headers.innerHTML = `<tr>
             <th>CRN</th>
             <th>Course Title</th>
-            <th>Lecture Time</th>
-            <th>Instructor</th>
             <th>Dept</th>
-            <th>Credits</th>
-            <th>Ratings</th>
+            <th>Enrolled</th>
             <th>Capacity</th>
             <th>Options</th>
           </tr>`;
@@ -22,33 +19,95 @@
 
         let search_results = document.getElementById("search_results");
         var first_elem = search_results.firstElementChild;
-
+        let keyword = document.getElementById('search_field').value;
+        console.log(keyword);
         while (first_elem) {
           first_elem.remove();
           first_elem = search_results.firstElementChild;
         }
+        let section_results = document.getElementById("section_results");
+        let section_results_holder = document.getElementById('section_results_holder');
+        section_results.remove();
+        section_results = document.createElement('table');
+        section_results.id = "section_results";
+        section_results_holder.append(section_results);
+
         search_results.append(headers);
         fetch(base_url + "/search", {
-          method: "GET",
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body:JSON.stringify({'keyword': keyword})
         })
           .then((resp) => resp.json())
           .then((res) => {
             console.log(res);
             // Data will likely be a list of maps
+            // CourseId, Title, Department, Enrolled Student number, Capacity
             for (i = 0; i < res.length; ++i) {
               data = res[i];
               let table_row = document.createElement("tr");
               table_row.innerHTML = `
-        			<td> ${data.CRN}</td>
-        			<td> ${data.Title}</td>
-              <td> ${data.Time}</td>
-        			<td> ${data.Instructor}</td>
-        			<td> ${data.Dept}</td>
-        			<td> ${data.Credits}</td>
-        			<td> ${data.Ratings}</td>
-        			<td> ${data.Capacity}</td>
-              <td> ${data.Options}</td>`;
+        			<td> ${data[0]}</td>
+        			<td> ${data[1]}</td>
+        			<td> ${data[2]}</td>
+        			<td> ${data[3]}</td>
+        			<td> ${data[4]}</td>
+              <td> <button value=${data[0]} onClick="getSections(data[0])"> View Section </button></td>`;
               search_results.append(table_row);
+            }
+          });
+      }
+      async function getSections(CRN) {
+        // CRN, Lecture Type, Avaliable Credits, Lecture Time, Location, Instructor Names, Capacity, Restrictions
+        const base_url = "http://127.0.0.1:5000";
+        let headers = document.createElement("tr");
+        headers.innerHTML = `<tr>
+            <th>CRN</th>
+            <th>Lecture Type</th>
+            <th>Available Credits</th>
+            <th>Lecture Time</th>
+            <th>Location</th>
+            <th>Instructor Names</th>
+            <th>Capacity</th>
+            <th>Restrictions</th>
+          </tr>`;
+        var results;
+        let section_results = document.getElementById("section_results");
+        var first_elem = search_results.firstElementChild;
+        while (first_elem) {
+          first_elem.remove();
+          first_elem = search_results.firstElementChild;
+        }
+        section_results.append(headers);
+        fetch(base_url + "/getSections", {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+        body:JSON.stringify({'section': CRN})
+        })
+          .then((resp) => resp.json())
+          .then((res) => {
+            console.log(res);
+            // Data will likely be a list of maps
+            // CourseId, Title, Department, Enrolled Student number, Capacity
+            for (i = 0; i < res.length; ++i) {
+              data = res[i];
+              let table_row = document.createElement("tr");
+              table_row.innerHTML = `
+        			<td> ${data[0]}</td>
+        			<td> ${data[1]}</td>
+        			<td> ${data[2]}</td>
+        			<td> ${data[3]}</td>
+        			<td> ${data[4]}</td>
+              <td> ${data[5]}</td>
+              <td> ${data[6]}</td>
+              <td> <button> ${"Enroll"} </button></td>`;
+              section_results.append(table_row);
             }
           });
       }
@@ -67,6 +126,9 @@
 
     <div>
       <table id="search_results"></table>
+    </div>
+    <div id="section_results_holder">
+      <table id="section_results"></table>
     </div>
   </body>
   <style>
