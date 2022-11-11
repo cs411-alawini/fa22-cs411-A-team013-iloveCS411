@@ -11,12 +11,12 @@
 		{% endif %}
 		</ul>
         <div class="topnav">
-            <a class="active" href="#View my schedule">View my schedule</a>
-            <a href="#Add Courses">Add Courses</a>
-            <a href="#Drop Courses">Drop Courses</a>
-            <a href="Seach Courses">Seach Courses</a>
-            <a href="Alter Courses">Alter Courses</a>
-          </div>
+            <a class="active" href="{{ url_for("student") }}">Manage Schedule</a>
+            <a href="{{ url_for("explorer") }}">Course Explorer</a>
+            <a href="Not_Implemented">Past Courses</a>
+            <a href="{{ url_for("unlogger")}}">Logout</a>
+        </div>
+
 	</body>
     <style>
         /* Add a black background color to the top navigation */
