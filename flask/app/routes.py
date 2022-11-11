@@ -49,6 +49,13 @@ def student():
     ret  = db_helper.show_schedule(netId, semester)
     return render_template("student.html", enrolled = ret)
 
+#for drop courses
+@app.route("/drop/<string:drop_crn>/", methods=["GET", "POST"])
+def drop(drop_crn):
+    netId = session["username"]
+    CRN = drop_crn
+    ret = db_helper.drop(netId, CRN)
+    return redirect(url_for("student")) #direct to register page
 
 #faculty home page
 @app.route("/history", methods=["GET", "POST"])
