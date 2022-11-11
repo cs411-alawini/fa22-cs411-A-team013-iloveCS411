@@ -81,16 +81,18 @@ def explorer():
 
 @app.route('/search', methods=['POST'])
 def search():
-    # Temporary return msg. 
-    # TODO: call db_helper function to get list of search results, then return a JSON
     input = request.get_json()['keyword']
     data = db_helper.keyword_course_search(input)
     return jsonify(data)
 
 @app.route('/getSections', methods=['POST'])
 def getSections():
-    # Temporary return msg. 
-    # TODO: call db_helper function to get list of search results, then return a JSON
     input = request.get_json()['section']
     data = db_helper.show_sections(input)
+    return jsonify(data)
+
+@app.route('/enroll', methods=['POST'])
+def enroll():
+    resp = request.get_json()
+    data = db_helper.enroll(resp['netid'], resp['CRN'])
     return jsonify(data)
