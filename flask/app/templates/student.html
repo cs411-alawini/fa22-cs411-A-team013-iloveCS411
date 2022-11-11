@@ -3,6 +3,7 @@
 	<head>
 		<title>Student home</title>
 	</head>
+
 	<body>
 		<h1>Welcome back {% if "username" in session %} {{session["username"]}} !{% endif %}</h1>
 		{% if "username" in session %}
@@ -19,19 +20,6 @@
         <br /><br />
         <h2>Your Schedule for current semester</h2>
 
-        let headers = document.createElement("tr");
-        headers.innerHTML = `<tr>
-            <th>CRN</th>
-            <th>Course Title</th>
-            <th>Lecture Time</th>
-            <th>Instructor</th>
-            <th>Dept</th>
-            <th>Credits</th>
-            <th>Ratings</th>
-            <th>Capacity</th>
-            <th>Options</th>
-          </tr>`;
-
         <div>
           <table id="show_enroll"></table>
         </div>
@@ -42,9 +30,10 @@
             <div>show courses</div>
         {% endif %}
 
+
 		<ul class="entries">
 		{% for entry in enrolled %} 
-            <li><h3>{{ entry}} </h3> 
+            show_schedule({{entry}})
 		{% else %}
 			 <li><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em>
 		{% endfor %}
