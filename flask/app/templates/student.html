@@ -3,6 +3,7 @@
 	<head>
 		<title>Student home</title>
 	</head>
+
 	<body>
 		<h1>Welcome back {% if "username" in session %} {{session["username"]}} !{% endif %}</h1>
 		{% if "username" in session %}
@@ -19,19 +20,6 @@
         <br /><br />
         <h2>Your Schedule for current semester</h2>
 
-        let headers = document.createElement("tr");
-        headers.innerHTML = `<tr>
-            <th>CRN</th>
-            <th>Course Title</th>
-            <th>Lecture Time</th>
-            <th>Instructor</th>
-            <th>Dept</th>
-            <th>Credits</th>
-            <th>Ratings</th>
-            <th>Capacity</th>
-            <th>Options</th>
-          </tr>`;
-
         <div>
           <table id="show_enroll"></table>
         </div>
@@ -39,15 +27,39 @@
         {% if enrolled|length == 0 %}
             <li><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em>
         {% else %}
-            <div>show courses</div>
+            {% block content %}
+            <table id="data" class="course_table">
+            <thead>
+                <tr>
+                    <th>CRN</th>
+                    <th>Course ID</th>
+                    <th>Title</th>
+                    <th>Lecture Type</th>
+                    <th>Lecture Time</th>
+                    <th>Location</th>
+                    <th>Credit</th>
+                    <th>Grades</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in enrolled %}
+                <tr>
+                    <td>{{ entry[0] }}</td>
+                    <td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }}</td>
+                    <td>{{ entry[3] }}</td>
+                    <td>{{ entry[4] }}</td>
+                    <td>{{ entry[5] }}</td>
+                    <td>{{ entry[6] }}</td>
+                    <td>{{ entry[7] }}</td>
+                    <td><a href="{{ url_for('drop', drop_crn = entry[0]) }}">Drop Course</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% endblock %}
         {% endif %}
-
-		<ul class="entries">
-		{% for entry in enrolled %} 
-            <li><h3>{{ entry}} </h3> 
-		{% else %}
-			 <li><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em>
-		{% endfor %}
 	</body>
     <style>
         /* Add a black background color to the top navigation */
@@ -77,6 +89,13 @@
         background-color: #04AA6D;
         color: white;
         }
+
+        table {
+            border: 1px solid;
+            width: 100%;
+        }
+
+        table.course_table tr td { font-size: 16px; }
     </style>
     
 </html>
