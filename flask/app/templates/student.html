@@ -58,7 +58,7 @@
                     <td>
                     <form action="{{ url_for('update_cred', crn = entry[0]) }}" method="POST">
                         <input type="text" name="new_cred" placeholder="Enter new credit" />
-                        <input class = 'button' type = 'submit' value = 'Update Credit' ></input>
+                        <input type = 'submit' value = 'Update Credit' ></input>
                     </form>
                     </td>
 
@@ -114,28 +114,38 @@
             width: 100%;
         }
 
-        table.course_table tr td { font-size: 16px; }
+        table.course_table tr td { font-size: 15px; }
 
         .button{
         background-color: #2a609a;
-            width: 80px;
-            height: 40px;
+            width: 100px;
+            height: 60px;
         color: white;
         outline: none;
-        font-size: 16px;
+        font-size: 18px;
         border: none;
         cursor: pointer;
+        white-space: nowrap;
         }
 
         .block-display button{
-        margin-bottom:5px;
+        margin-bottom:10px;
         display:block;
         }
 
         .button:hover{
         background-color: #32CD32;
-        font-size: 20px;
+        font-size: 18px;
         transition: 0.5s;
+        white-space: nowrap;
+        }
+
+        input[type="text"] {
+            width: 100px;
+        }
+
+        td {
+            text-align: center;
         }
     </style>
     
