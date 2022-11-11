@@ -55,6 +55,20 @@ def drop(drop_crn):
     netId = session["username"]
     CRN = drop_crn
     ret = db_helper.drop(netId, CRN)
+    flash("Course dropped successfully")
+    return redirect(url_for("student")) #direct to register page
+
+
+#for change course credit
+@app.route("/update_cred/<string:crn>/", methods=["GET", "POST"])
+def update_cred(crn):
+    netId = session["username"]
+    new_cred = request.form.get("new_cred")
+    ret = db_helper.change_credit(netId, crn, new_cred)
+    if ret == 0:
+        flash("Credit update was successful")
+    else:
+        flash("Credit update was unsuccessful")
     return redirect(url_for("student")) #direct to register page
 
 #faculty home page
