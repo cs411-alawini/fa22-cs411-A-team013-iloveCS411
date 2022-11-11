@@ -116,4 +116,7 @@ def getSections():
 def enroll():
     resp = request.get_json()
     data = db_helper.enroll(resp['netid'], resp['CRN'])
-    return jsonify(data)
+    if not data: 
+        return jsonify(success=True)
+    else:
+        return jsonify(success=False)
