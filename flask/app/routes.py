@@ -45,14 +45,13 @@ def login():
 @app.route("/student", methods=["GET", "POST"])
 def student():
     netId = session["username"]
-    semester = 'SP23'
+    semester = 'SP23' #this is the current semester
     ret  = db_helper.show_schedule(netId, semester)
-    print(ret)
-    return render_template("student.html")
+    return render_template("student.html", enrolled = ret)
 
 
 #faculty home page
-@app.route("/history", methods=["GET"])
+@app.route("/history", methods=["GET", "POST"])
 def history():
     #todo
     return render_template("history.html")

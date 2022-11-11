@@ -16,7 +16,38 @@
             <a href="{{ url_for("history") }}">Course History</a>
             <a href="{{ url_for("unlogger")}}">Logout</a>
         </div>
+        <br /><br />
+        <h2>Your Schedule for current semester</h2>
 
+        let headers = document.createElement("tr");
+        headers.innerHTML = `<tr>
+            <th>CRN</th>
+            <th>Course Title</th>
+            <th>Lecture Time</th>
+            <th>Instructor</th>
+            <th>Dept</th>
+            <th>Credits</th>
+            <th>Ratings</th>
+            <th>Capacity</th>
+            <th>Options</th>
+          </tr>`;
+
+        <div>
+          <table id="show_enroll"></table>
+        </div>
+        
+        {% if enrolled|length == 0 %}
+            <li><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em>
+        {% else %}
+            <div>show courses</div>
+        {% endif %}
+
+		<ul class="entries">
+		{% for entry in enrolled %} 
+            <li><h3>{{ entry}} </h3> 
+		{% else %}
+			 <li><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em>
+		{% endfor %}
 	</body>
     <style>
         /* Add a black background color to the top navigation */
