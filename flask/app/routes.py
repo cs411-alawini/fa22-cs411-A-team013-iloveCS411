@@ -9,7 +9,6 @@ app.secret_key = "this is a great secret key"
 @app.route("/")
 def homepage():
     """ returns rendered homepage """
-
     return render_template("login.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -31,10 +30,12 @@ def login():
     if ret == 0: #success login for student
         flash("login successful")
         session["username"] = netId
+        session["fullname"] = db_helper.getName(netId, 'Students')
         return redirect(url_for("student"))
     elif ret == 1: #success login for faculty
         flash("login successful")
         session["username"] = netId
+        session["fullname"] = db_helper.getName(netId, 'Professors')
         return redirect(url_for("faculty"))
     else: #wrong login credentials
         flash("Invalid netId or password!")
@@ -81,8 +82,9 @@ def history():
 #faculty home page
 @app.route("/faculty", methods=['GET', 'POST'])
 def faculty():
-    #todo
-    return render_template("adv_query.html", ret=[])
+    netId = session["username"]
+    inst_sections = db_helper.instruct_sections(netId)
+    return render_template("professor.html", instruct=inst_sections)
 
 @app.route("/find_student", methods=['GET', 'POST'])
 def find_student():

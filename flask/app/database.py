@@ -4,6 +4,20 @@ from app import db
 
 DEFAULT_SEM = 'SP23'
 
+#auxiliary functions
+
+def getName(NetId, type):
+    if type not in ['Students', 'Professors']:
+        return ''
+    conn = db.connect()
+    query = "SELECT Name FROM {} WHERE NetId = '{}';".format(type, NetId)
+    results = conn.execute(query).fetchall()
+    if len(results) == 0:
+        return ''
+    return results[0][0]
+
+# database queries
+
 def login(NetId, Password):
     conn = db.connect()
     results = conn.execute("SELECT * FROM UserInfo WHERE NetId='{}';".format(NetId)).fetchall()
@@ -402,3 +416,21 @@ def student_search(condition):
     conn.close()
     return ret
 
+def instruct_sections(netId):
+    # return CRN, CourseId, CourseName
+    conn = db.connect()
+    crn_query = "SELECT CRN FROM Instruct WHERE Professor = '{}';".format(netId)
+    results = conn.execute(crn_query).fetchall()
+    ret = []
+    for row in results:
+        crn = row[0]
+        info_query = "SELECT CRN, CourseId, Title, LectureTime, Location FROM Courses NATURAL JOIN Sections WHERE CRN = {};".format(crn)
+        section = conn.execute(info_query).fetchall()[0]
+        info = [section[0], section[1], section[2], section[3], section[4]]
+        stu_num_query = "SELECT COUNT(NetId) FROM Enrollments WHERE CRN = {} and Semester = '{}';".format(crn, DEFAULT_SEM)
+        stu_num = conn.execute(stu_num_query).fetchall()[0][0]
+        info.append(stu_num)
+        ret.append(info)
+    conn.close()
+    print(ret)
+    return ret

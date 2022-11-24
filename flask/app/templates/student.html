@@ -5,7 +5,7 @@
 	</head>
 
 	<body>
-		<h1>Welcome back {% if "username" in session %} {{session["username"]}} !{% endif %}</h1>
+		<h1>Welcome back {% if "fullname" in session %} {{session["fullname"]}} !{% endif %}</h1>
 		{% if "username" in session %}
 			Logged in as {{ session["username"] }}
 			<br /><br /><br />
