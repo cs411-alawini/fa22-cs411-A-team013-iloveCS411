@@ -12,6 +12,44 @@
             <a href="{{ url_for("unlogger")}}">Logout</a>
         </div>
 
+        <div class="history_table">
+            <h2>Course History</h2>
+        {% if enrolled|length == 0 %}
+            <p><em>You are not enrolled in any course, use "Course Explorer" to register for courses!</em></p>
+        {% else %}
+            {% block content %}
+            <table id="data" class="course_table">
+            <thead>
+                <tr>
+                    <th>CRN</th>
+                    <th>Course ID</th>
+                    <th>Title</th>
+                    <th>Credit</th>
+                    <th>Grades</th>
+                    <th>Semester</th>
+                    <th>Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in enrolled %}
+                <tr>
+                    <td>{{ entry[0] }}</td>
+                    <td>{{ entry[1] }}</td>
+                    <td>{{ entry[2] }}</td>
+                    <td>{{ entry[6] }}</td>
+                    <td>{{ entry[7] }}</td>
+                    <td>{{ entry[8] }}</td>
+                    <td><a>Rate your professor</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% endblock %}
+        {% endif %}
+
+        </div>
+
+
 	</body>
     <style>
         /* Add a black background color to the top navigation */
@@ -40,6 +78,44 @@
         .topnav a.active {
         background-color: #04AA6D;
         color: white;
+        }
+        table {
+            border: 1px solid;
+            width: 100%;
+        }
+
+        table.course_table tr td { font-size: 15px; }
+
+        .button{
+        background-color: #2a609a;
+            width: 100px;
+            height: 60px;
+        color: white;
+        outline: none;
+        font-size: 18px;
+        border: none;
+        cursor: pointer;
+        white-space: nowrap;
+        }
+
+        .block-display button{
+        margin-bottom:10px;
+        display:block;
+        }
+
+        .button:hover{
+        background-color: #32CD32;
+        font-size: 18px;
+        transition: 0.5s;
+        white-space: nowrap;
+        }
+
+        input[type="text"] {
+            width: 100px;
+        }
+
+        td {
+            text-align: center;
         }
     </style>
     

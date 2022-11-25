@@ -72,9 +72,13 @@ def show_schedule(netId, semester):
     ]
     '''
     conn = db.connect()
-    query = "SELECT CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade \
+    if semester is not None:
+        sem_string = " And Semester = '{}'".format(semester)
+    else:
+        sem_string = ""
+    query = "SELECT CRN, CourseId, Title, LectureType, LectureTime, Location, Credit, Grade, Semester \
     FROM Enrollments NATURAL JOIN Sections NATURAL JOIN Courses \
-    WHERE NetId = '{}' AND semester = '{}';".format(netId, semester)
+    WHERE NetId = '{}'{} ORDER BY Semester;".format(netId, sem_string)
     results = conn.execute(query).fetchall()
     ret = [x for x in results]
     conn.close()
@@ -479,3 +483,20 @@ def modify_grade(CRN, NetId, Grade, semester=DEFAULT_SEM):
     conn.execute(update_query)
     print("update success.")
     return 0
+
+def get_prof_by_CRN(CRN):
+    conn=db.connect()
+    query = "SELECT Professor FROM Instruct WHERE CRN = {};".format(CRN)
+    results = conn.execute(query).fetchall()
+    ret = []
+    for row in results:
+        netid = row[0]
+        name = conn.execute("SELECT Name FROM Professors WHERE NetId = '{}';".format(netid)).fetchall()[0]
+        ret.append([netid, name])
+    conn.close()
+    print(ret)
+    return ret
+
+def rate_professor(st, prof, rate, comment):
+    #todo
+    pass

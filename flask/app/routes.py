@@ -78,7 +78,9 @@ def update_cred(crn):
 @app.route("/history", methods=["GET", "POST"])
 def history():
     #todo
-    return render_template("history.html")
+    netId = session["username"]
+    course_table = db_helper.show_schedule(netId, None)
+    return render_template("history.html", enrolled=course_table)
 
 
 #faculty home page
