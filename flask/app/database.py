@@ -16,6 +16,20 @@ def getName(NetId, type):
         return ''
     return results[0][0]
 
+def sectionInfo(CRN):
+    query = "SELECT CRN, CourseId, Title, Description, LectureTime, Location, Capacity FROM Courses NATURAL JOIN Sections WHERE CRN = {};".format(CRN)
+    conn = db.connect()
+    results = conn.execute(query).fetchall()[0]
+    return {
+        'CRN': results[0],
+        'CourseId': results[1],
+        'Title': results[2],
+        'Description': results[3],
+        'LectureTime': results[4],
+        'Location': results[5],
+        'Capacity': results[6]
+    }
+
 # database queries
 
 def login(NetId, Password):
@@ -369,10 +383,10 @@ def enroll(netId, CRN):
     conn.close()
     return 0
 
-def generate_query(dept, enrolled, mincre, nof):
+def generate_query(dept, enrolled, mincre, nof, crn, semester=DEFAULT_SEM):
     query1 = "SELECT NetId, Name, Department, SUM(Credit) as TotalCredits \
             FROM Students s NATURAL JOIN Enrollments e \
-            WHERE True "
+            WHERE CRN = {} AND Semester = '{}' ".format(crn, semester)
     if dept is not None:
         query1 += "AND Department = '{}' ".format(dept)
     if enrolled is not None:
@@ -385,7 +399,7 @@ def generate_query(dept, enrolled, mincre, nof):
     query1 += "GROUP BY NetId HAVING TotalCredits >= {}".format(mincre)
     return query1
 
-def student_search(condition):
+def student_search(condition, crn):
     Dept1 = condition['Dept1'] if condition['Dept1'] != '' else None
     Dept2 = condition['Dept2'] if condition['Dept2'] != '' else None
     Enrolled1 = condition['Enrolled1'] if condition['Enrolled1'] != '' else None
@@ -405,8 +419,8 @@ def student_search(condition):
     if not condition1 and not condition2:
         print("No Condition Found.")
         return []
-    query1 = generate_query(Dept1, Enrolled1, MinCre1, NoF1) if condition1 else ""
-    query2 = generate_query(Dept2, Enrolled2, MinCre2, NoF2) if condition2 else ""
+    query1 = generate_query(Dept1, Enrolled1, MinCre1, NoF1, crn) if condition1 else ""
+    query2 = generate_query(Dept2, Enrolled2, MinCre2, NoF2, crn) if condition2 else ""
     union = "UNION" if condition1 and condition2 else ""
     
     query = query1 + " " + union + " " + query2 + " ORDER BY NetId;"
@@ -434,3 +448,34 @@ def instruct_sections(netId):
     conn.close()
     print(ret)
     return ret
+
+def section_students(CRN):
+    # return NetId, Name, Credit, Grade
+    conn = db.connect()
+    netid_query = "SELECT NetId, Credit, Grade FROM Enrollments WHERE CRN = {} and Semester = '{}';".format(CRN, DEFAULT_SEM)
+    results = conn.execute(netid_query).fetchall()
+    ret = []
+    for row in results:
+        netid = row[0]
+        credit = row[1]
+        grade = row[2]
+        st_query = "SELECT Name FROM Students WHERE NetId = '{}';".format(netid)
+        name = conn.execute(st_query).fetchall()[0][0]
+        ret.append([netid, name, credit, grade])
+    conn.close()
+    print(ret)
+    return ret
+
+def modify_grade(CRN, NetId, Grade, semester=DEFAULT_SEM):
+    conn = db.connect()
+    check_query = "SELECT * FROM Enrollments WHERE CRN = {} AND NetId = '{}' AND Semester = '{}';".format(CRN, NetId, semester)
+    check_result = conn.execute(check_query).fetchall()
+    if len(check_result) == 0:
+        print("update failed.")
+        return -1
+    if Grade=='None':
+        Grade = None
+    update_query = "UPDATE Enrollments SET Grade = '{}' WHERE CRN = {} AND NetId = '{}' AND Semester = '{}';".format(Grade,CRN,NetId,semester)
+    conn.execute(update_query)
+    print("update success.")
+    return 0

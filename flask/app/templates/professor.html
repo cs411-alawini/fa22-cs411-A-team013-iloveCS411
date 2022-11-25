@@ -12,8 +12,8 @@
 		{% endif %}
 		</ul>
         <div class="topnav">
-            <a class="active" href="{{ url_for("faculty") }}">Instruction Schedules</a>
-            <a href="{{ url_for("unlogger")}}">Logout</a>
+            <a class="active" href="{{ url_for('faculty') }}">Instruction Schedules</a>
+            <a href="{{ url_for('unlogger')}} ">Logout</a>
         </div>
         <br /><br />
 
@@ -27,7 +27,9 @@
                 <p>
                     {{ entry[3] }} | {{ entry[4] }} 
                 </p>
-                <button title="Manage" aria-label="Manage">Manage</button>
+                <p>
+                    <a class="button"  href="{{ url_for('sec_manage', crn = entry[0]) }}"> Manage </a>
+                </p>
             </div>
             {% endfor %}
         </div>

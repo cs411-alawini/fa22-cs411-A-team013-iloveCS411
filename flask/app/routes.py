@@ -31,11 +31,13 @@ def login():
         flash("login successful")
         session["username"] = netId
         session["fullname"] = db_helper.getName(netId, 'Students')
+        session["semester"] = db_helper.DEFAULT_SEM
         return redirect(url_for("student"))
     elif ret == 1: #success login for faculty
         flash("login successful")
         session["username"] = netId
         session["fullname"] = db_helper.getName(netId, 'Professors')
+        session["semester"] = db_helper.DEFAULT_SEM
         return redirect(url_for("faculty"))
     else: #wrong login credentials
         flash("Invalid netId or password!")
@@ -86,10 +88,30 @@ def faculty():
     inst_sections = db_helper.instruct_sections(netId)
     return render_template("professor.html", instruct=inst_sections)
 
-@app.route("/find_student", methods=['GET', 'POST'])
-def find_student():
-    data = db_helper.student_search(request.form)
-    return render_template("adv_query.html", ret=data)
+@app.route("/sec_manage/<string:crn>/", methods=['GET', 'POST'])
+def sec_manage(crn):
+    section_info = db_helper.sectionInfo(crn) # dict
+    stu_list = db_helper.section_students(crn)
+    return render_template("section.html", sec=section_info, stu=stu_list)
+
+@app.route("/assert_grade/<string:crn>/<string:netid>", methods=['GET', 'POST'])
+def assert_grade(crn, netid):
+    new_grade = request.form.get("Grade")
+    print(new_grade)
+    ret = db_helper.modify_grade(crn, netid, new_grade)
+    return redirect(url_for("sec_manage", crn=crn)) #direct to register page
+
+@app.route("/adv_query/<string:crn>/", methods=['GET', 'POST'])
+def adv_query(crn):
+    section_info = db_helper.sectionInfo(crn) # dict
+    return render_template("adv_query.html", sec=section_info, ret=[])
+
+
+@app.route("/find_student/<string:crn>/", methods=['GET', 'POST'])
+def find_student(crn):
+    data = db_helper.student_search(request.form, crn)
+    section_info = db_helper.sectionInfo(crn) # dict
+    return render_template("adv_query.html", sec=section_info, ret=data)
 
 
 #log out page
