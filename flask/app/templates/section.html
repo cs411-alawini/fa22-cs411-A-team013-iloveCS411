@@ -15,7 +15,11 @@
 
         <div class="sec_info">
             <p>
-                {{ stu|length }} students enrolled this semester (Max Capacity: {{ sec['Capacity'] }})
+                {{ stu|length }} students enrolled this semester (Max Capacity: {{ sec['Capacity'] }}) Change Max Capacity
+                <form action="{{ url_for('change_cap', crn = sec['CRN']) }}" method="POST">
+                    <input type="number" name="new_cap" placeholder="Change Capacity" min="0" />
+                    <input type = 'submit' value = 'Confirm' ></input>
+                </form>
             </p>
             <p>
                 Location: {{ sec['Location'] }} 

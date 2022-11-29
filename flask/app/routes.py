@@ -115,6 +115,12 @@ def find_student(crn):
     section_info = db_helper.sectionInfo(crn) # dict
     return render_template("adv_query.html", sec=section_info, ret=data)
 
+@app.route("/change_cap/<string:crn>/", methods=['GET', 'POST'])
+def change_cap(crn):
+    new_cap = request.form.get("new_cap")
+    ret = db_helper.change_capacity(crn, new_cap)
+    return redirect(url_for("sec_manage", crn=crn))
+
 
 #log out page
 @app.route("/logout/")

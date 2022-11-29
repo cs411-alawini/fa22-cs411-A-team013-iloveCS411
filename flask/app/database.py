@@ -520,3 +520,18 @@ def get_prof_by_CRN(CRN):
 def rate_professor(st, prof, rate, comment):
     #todo
     pass
+
+def change_capacity(CRN, cap):
+    conn = db.connect()
+    query = "SELECT * FROM Sections WHERE CRN = {};".format(CRN)
+    results = conn.execute(query).fetchall()
+    if len(results) == 0:
+        print("Cannot find section.")
+        conn.close()
+        return -1
+    update_query = "UPDATE Sections SET Capacity = {} WHERE CRN = {};".format(cap, CRN)
+    conn.execute(update_query)
+    print("success update.")
+    conn.close()
+    return 0
+    
