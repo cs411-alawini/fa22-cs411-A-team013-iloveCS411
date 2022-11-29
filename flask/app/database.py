@@ -350,6 +350,8 @@ def enroll(netId, CRN):
     #raise NotImplementedError
     #return -1 
     conn = db.connect()
+    conn.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
+    conn.execute("START TRANSACTION;")
     query1 = "SELECT Level FROM Students WHERE NetId = '{}';".format(netId)
     query2 = "SELECT Restrictions FROM Sections WHERE CRN = {};".format(CRN)
     result1 = conn.execute(query1).fetchall()
@@ -357,33 +359,51 @@ def enroll(netId, CRN):
     if result1[0][0] == "Undergrad" and result2[0][0].find("U") != -1:
         ret = 1 # it has restriction to this student
         print("Restrictions.")
+        conn.execute("COMMIT;")
         conn.close()
         return ret
     elif result1[0][0] == "Grad" and result2[0][0].find("G") != -1:
         ret = 1 # it has restriction to this student
         print("Restrictions.")
+        conn.execute("COMMIT;")
         conn.close()
         return ret
-    query3 = "SELECT COUNT(NetId) FROM Enrollments WHERE CRN = {} AND Semester = '{}';".format(CRN, DEFAULT_SEM)
-    query4 = "SELECT Capacity, AvaliableCredits FROM Sections WHERE CRN = {};".format(CRN)
+    # advanced query: check if this section reached its capacity
+    query3 = "SELECT CRN\
+            FROM Enrollments NATURAL JOIN Sections \
+            WHERE Semester = '{}' \
+            GROUP BY CRN, Capacity \
+            HAVING COUNT(NetId) >= Capacity \
+            UNION \
+            SELECT CRN FROM Sections WHERE Capacity <= 0;".format(DEFAULT_SEM)
     result3 = conn.execute(query3).fetchall()
+    for full_section in result3:
+        sec_crn = full_section[0]
+        if sec_crn == eval(CRN):
+            ret = 2 # it exceeds the capacity
+            print("Capacity.")
+            conn.execute("COMMIT;")
+            conn.close()
+            return ret
+    query4 = "SELECT CourseId, AvaliableCredits FROM Sections WHERE CRN = {};".format(CRN)
     result4 = conn.execute(query4).fetchall()
-    if 1 + result3[0][0] > result4[0][0]:
-        ret = 2 # it exceeds the capacity
-        print("Capacity.", result3[0][0], result4[0][0])
-        conn.close()
-        return ret
-    query5 = "SELECT CRN FROM Enrollments WHERE CRN = {} AND NetId = '{}';".format(CRN, netId)
+    cid = result4[0][0]
+    cr = min_credit(result4[0][1])
+    # advanced query: check if enrolled in the same course before (same courseid)
+    query5 = "SELECT * FROM Enrollments WHERE NetId = '{}' AND CRN in \
+            (SELECT CRN FROM Sections WHERE CourseId = '{}');".format(netId, cid)
     result5 = conn.execute(query5).fetchall()
     if len(result5) != 0:
         ret = 3 # the student has enrolled in this class before
         print("Enrolled.")
+        conn.execute("COMMIT;")
         conn.close()
         return ret
-    cr = min_credit(result4[0][1])
+    
     query6 = "INSERT INTO Enrollments (CRN, NetId, Semester, Credit) VALUES ({}, '{}', '{}', {});".format(CRN,netId,DEFAULT_SEM,cr)
     conn.execute(query6)
     print("insert success.")
+    conn.execute("COMMIT;")
     conn.close()
     return 0
 

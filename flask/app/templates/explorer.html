@@ -139,7 +139,12 @@
             if (res.success == true)
               alert('Successfully added course')
             else
-              alert('Could not add course')
+              if (res.data == 1)
+                alert('Enroll Failed. This section has level restriction.')
+              else if(res.data == 2)
+                alert('Enroll Failed. This section has reached capacity.')
+              else if(res.data == 3)
+                alert('Enroll Failed. You have enrolled in this course.')
 
           })
       }
