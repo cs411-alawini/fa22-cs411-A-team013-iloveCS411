@@ -27,7 +27,7 @@
                     <th>Credit</th>
                     <th>Grades</th>
                     <th>Semester</th>
-                    <th>Rate</th>
+                    <th>Rate this course</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,18 @@
                     <td>{{ entry[6] }}</td>
                     <td>{{ entry[7] }}</td>
                     <td>{{ entry[8] }}</td>
-                    <td><a>Rate your professor</a></td>
+                    <td>
+                        <form action="/action_page.php">
+                            <select name="ratings" id="rate_prof">
+                              <option value=1>1</option>
+                              <option value=2>2</option>
+                              <option value=3>3</option>
+                              <option value=4>4</option>
+                              <option value=5>5</option>
+                            </select>
+                            <input type="submit" value="Submit">
+                          </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

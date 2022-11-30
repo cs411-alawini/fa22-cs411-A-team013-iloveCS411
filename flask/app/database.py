@@ -517,7 +517,7 @@ def get_prof_by_CRN(CRN):
     print(ret)
     return ret
 
-def rate_professor(st, prof, rate, comment):
+def rate_professor(netid, CRN, rate):
     #todo
     pass
 
