@@ -40,8 +40,11 @@
                     <td>{{ entry[7] }}</td>
                     <td>{{ entry[8] }}</td>
                     <td>
-                        <form action="/action_page.php">
-                            <select name="ratings" id="rate_prof">
+                        {% for prof in entry[9] %}
+                        {% if prof[2] == None %}
+                        <form action="{{ url_for('rate_prof', prof_id = prof[0]) }}" method="POST">
+                            Rate Professor {{ prof[1] }}
+                            <select name="ratings" id="ratings">
                               <option value=1>1</option>
                               <option value=2>2</option>
                               <option value=3>3</option>
@@ -50,6 +53,10 @@
                             </select>
                             <input type="submit" value="Submit">
                           </form>
+                        {% else %}
+                        Rate Professor {{ prof[1] }} (Already submitted: {{ prof[2] }})
+                        {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
                 {% endfor %}
@@ -93,9 +100,14 @@
         table {
             border: 1px solid;
             width: 100%;
+            border-collapse: collapse;
         }
 
-        table.course_table tr td { font-size: 15px; }
+        table.course_table tr td { font-size: 15px; text-align: left; }
+
+        table.course_table tr {
+            border: solid;
+        }
 
         .button{
         background-color: #2a609a;

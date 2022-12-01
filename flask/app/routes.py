@@ -82,6 +82,14 @@ def history():
     course_table = db_helper.show_schedule(netId, None)
     return render_template("history.html", enrolled=course_table)
 
+@app.route("/rate_prof/<string:prof_id>/", methods=["GET", "POST"])
+def rate_prof(prof_id):
+    netId = session["username"]
+    ratings = request.form.get("ratings")
+    ret = db_helper.rate_professor(netId, prof_id, ratings)
+    return redirect(url_for("history"))
+
+
 
 #faculty home page
 @app.route("/faculty", methods=['GET', 'POST'])

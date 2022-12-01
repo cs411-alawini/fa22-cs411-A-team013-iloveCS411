@@ -80,7 +80,22 @@ def show_schedule(netId, semester):
     FROM Enrollments NATURAL JOIN Sections NATURAL JOIN Courses \
     WHERE NetId = '{}'{} ORDER BY Semester;".format(netId, sem_string)
     results = conn.execute(query).fetchall()
-    ret = [x for x in results]
+    ret = []
+    for row in results:
+        crn = row[0]
+        query_prof = "SELECT Professor FROM Instruct WHERE CRN = {};".format(crn)
+        results_prof = conn.execute(query_prof).fetchall()
+        profs = []
+        for row_prof in results_prof:
+            netid = row_prof[0]
+            name = conn.execute("SELECT Name FROM Professors WHERE NetId = '{}';".format(netid)).fetchall()[0][0]
+            rating_lst = conn.execute("SELECT Rate FROM Ratings WHERE Student= '{}' AND Professor = '{}';".format(netId, netid)).fetchall()
+            if len(rating_lst) == 0:
+                rating = None
+            else:
+                rating = rating_lst[0][0]
+            profs.append([netid, name, rating])
+        ret.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], profs])
     conn.close()
     print(ret)
     return ret
@@ -350,7 +365,7 @@ def enroll(netId, CRN):
     #raise NotImplementedError
     #return -1 
     conn = db.connect()
-    conn.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
+    conn.execute("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;")
     conn.execute("START TRANSACTION;")
     query1 = "SELECT Level FROM Students WHERE NetId = '{}';".format(netId)
     query2 = "SELECT Restrictions FROM Sections WHERE CRN = {};".format(CRN)
@@ -517,9 +532,22 @@ def get_prof_by_CRN(CRN):
     print(ret)
     return ret
 
-def rate_professor(netid, CRN, rate):
+def rate_professor(netid, prof_netid, rate):
     #todo
-    pass
+    # pass
+    conn = db.connect()
+    check_query = "SELECT * FROM Ratings WHERE Student = '{}' AND Professor = '{}';".format(netid, prof_netid)
+    results = conn.execute(check_query).fetchall()
+    if len(results) > 0:
+        conn.close()
+        print("Already rated.")
+        return -1
+    query = "INSERT INTO Ratings(Student, Professor, Rate) VALUES ('{}', '{}', {});".format(netid, prof_netid, rate)
+    conn.execute(query)
+    print("Rating success")
+    conn.close()
+    return 0
+
 
 def change_capacity(CRN, cap):
     conn = db.connect()
