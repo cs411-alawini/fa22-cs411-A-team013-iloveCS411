@@ -80,7 +80,9 @@ def history():
     #todo
     netId = session["username"]
     course_table = db_helper.show_schedule(netId, None)
-    return render_template("history.html", enrolled=course_table)
+    credit = db_helper.credit_calculation(netId)
+    gpa = db_helper.GPA_calculation(netId)
+    return render_template("history.html", enrolled=course_table, total_credit=credit, gpa=gpa)
 
 @app.route("/rate_prof/<string:prof_id>/", methods=["GET", "POST"])
 def rate_prof(prof_id):
@@ -157,7 +159,8 @@ def search():
 def getSections():
     input = request.get_json()['section']
     data = db_helper.show_sections(input)
-    return jsonify(data)
+    info = db_helper.CourseInfo(input)
+    return jsonify(data=data, info=info)
 
 @app.route('/enroll', methods=['POST'])
 def enroll():

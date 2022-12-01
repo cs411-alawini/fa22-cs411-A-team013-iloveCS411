@@ -25,6 +25,8 @@
           first_elem.remove();
           first_elem = search_results.firstElementChild;
         }
+        let course_header = document.getElementById("course_title");
+        course_header.textContent = '';
         let section_results = document.getElementById("section_results");
         let section_results_holder = document.getElementById('section_results_holder');
         section_results.remove();
@@ -105,8 +107,8 @@
             console.log(res);
             // Data will likely be a list of maps
             // CourseId, Title, Department, Enrolled Student number, Capacity
-            for (i = 0; i < res.length; ++i) {
-              data = res[i];
+            for (i = 0; i < res.data.length; ++i) {
+              data = res.data[i];
               let table_row = document.createElement("tr");
               table_row.innerHTML = `
         			<td> ${data[0]}</td>
@@ -119,7 +121,14 @@
               <td> ${data[7]}</td>
               <td> <button value=${data[0]} onClick="enroll(this.value)"> Enroll </button></td>`;
               section_results.append(table_row);
+              
             }
+            let course_head = document.getElementById("course_title");
+            course_head.append(res.info.CourseId)
+            course_head.append(" ")
+            course_head.append(res.info.Title)
+            let course_des = document.getElementById("course_description")
+            course_des.append(res.info.Description)
           });
       }
       function enroll(CRN) {
@@ -197,6 +206,8 @@
       </table>
     </div>
     <div style="margin: auto;" id="section_results_holder">
+      <h2 id = "course_title"></h2>
+      <p id = "course_description"></p>
       <table id="section_results">
 
       </table>

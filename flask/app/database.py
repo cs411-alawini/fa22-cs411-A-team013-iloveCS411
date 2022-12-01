@@ -30,6 +30,17 @@ def sectionInfo(CRN):
         'Capacity': results[6]
     }
 
+def CourseInfo(CourseId):
+    query = "SELECT CourseId, Department, Title, Description FROM Courses WHERE CourseId = '{}';".format(CourseId)
+    conn = db.connect()
+    results = conn.execute(query).fetchall()[0]
+    return {
+        'CourseId': results[0],
+        'Department': results[1],
+        'Title': results[2],
+        'Description': results[3],
+    }
+
 # database queries
 
 def login(NetId, Password):
@@ -322,12 +333,15 @@ def show_sections(courseId):
         credits = section[2]
         time = section[3]
         location = section[4]
-        instruct_query = "SELECT p.Name FROM Instruct i JOIN Professors p ON (i.Professor = p.NetId) WHERE i.CRN = {};".format(crn)
+        instruct_query = "SELECT p.Name, p.NetId FROM Instruct i JOIN Professors p ON (i.Professor = p.NetId) WHERE i.CRN = {};".format(crn)
         name_lst = conn.execute(instruct_query).fetchall()
         instructors = ""
         for i in range(len(name_lst)):
             name = name_lst[i]
             instructors += name[0]
+            prof_netid = name[1]
+            prof_rating = conn.execute("SELECT AVG(Rate) FROM Ratings WHERE Professor='{}';".format(prof_netid)).fetchall()[0][0]
+            instructors += "({})".format(prof_rating)
             if i < len(name_lst)-1:
                 instructors += "; "
         num_query = "SELECT COUNT(*) FROM Enrollments WHERE CRN = {} AND Semester = '{}';".format(crn, DEFAULT_SEM)
@@ -562,4 +576,50 @@ def change_capacity(CRN, cap):
     print("success update.")
     conn.close()
     return 0
+
+def credit_calculation(NetId):
+    conn = db.connect()
+    query = "SELECT sum(Credit) FROM Enrollments WHERE Grade <> 'F' AND Grade IS NOT NULL AND NetId = '{}';".format(NetId)
+    results = conn.execute(query).fetchall()
+    if len(results) == 0:
+        print("Cannot calculate credit.")
+        conn.close()
+        return -1
+    ret = results[0][0]
+    conn.close()
+    return ret
+
+
+def GPA_calculation(NetId):
+    conn = db.connect()
+    query = "SELECT Grade, Credit FROM Enrollments WHERE NetId = '{}' AND Grade IS NOT NULL;".format(NetId)
+    results = conn.execute(query).fetchall()
+    if len(results) == 0:
+        print("Cannot calculate GPA.")
+        conn.close()
+        return -1
+    total_credit = 0
+    total_mul = 0
+    grade_dict = {
+        'A+': 4.00,
+        'A': 4.00,
+        'A-': 3.67,
+        'B+': 3.33,
+        'B': 3.00,
+        'B-': 2.67,
+        'C+': 2.33,
+        'C': 2.00,
+        'C-': 1.67,
+        'D+': 1.33,
+        'D': 1.00,
+        'D-': 0.67,
+        'F': 0.00
+    }
+    for row in results:
+        grade = grade_dict[row[0]]
+        credit = row[1]
+        total_credit += credit
+        total_mul += grade * credit
+    GPA = total_mul/total_credit
+    return GPA
     
