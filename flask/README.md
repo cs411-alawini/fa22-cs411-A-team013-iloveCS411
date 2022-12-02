@@ -5,6 +5,29 @@ You cannot locally start the app now. To start our app, use this link below:
 [http://cs411-team013.uc.r.appspot.com/](http://cs411-team013.uc.r.appspot.com/)
 
 
+Student Page Operations: (use test account `ruipeng4`)
+- Manage Schedule
+  - View schedule
+  - Drop course
+  - change credit
+- Course Explorer
+  - Keyword Search
+  - Filters
+  - View Sections (newly designed)
+  - Enroll (related to transaction)
+- Course History
+  - View Course History (new)
+  - Rate Professors (new)
+  - Calculate Credit/GPA (new)
+
+Professor Page Operations: (use test account `prof77`)
+- Instruction Schedules
+  - View Instruction Schedule (new)
+  - Manage Sections (new)
+    - Assert Grades (new)
+    - Change Section　Capacity (new, related to trigger)
+    - Find Potential Students
+
 
 *The original tutorial is shown below*
 
