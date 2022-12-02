@@ -5,7 +5,7 @@
   <head>
     <script>
       async function getSearchResults() {
-        const base_url = "http://127.0.0.1:5000";
+        const base_url = "http://cs411-team013.uc.r.appspot.com";
         let headers = document.createElement("tr");
         headers.innerHTML = `<tr>
             <th>CRN</th>
@@ -74,7 +74,7 @@
       }
       async function getSections(CRN) {
         // CRN, Lecture Type, Avaliable Credits, Lecture Time, Location, Instructor Names, Capacity, Restrictions
-        const base_url = "http://127.0.0.1:5000";
+        const base_url = "http://cs411-team013.uc.r.appspot.com";
         let headers = document.createElement("tr");
         console.log(CRN)
         headers.innerHTML = `<tr>
@@ -134,7 +134,7 @@
           });
       }
       function enroll(CRN) {
-        const base_url = "http://127.0.0.1:5000";
+        const base_url = "http://cs411-team013.uc.r.appspot.com";
         var netid = document.getElementById('netid').getAttribute('value');
         console.log(netid)
         fetch(base_url + "/enroll", {

@@ -14,3 +14,4 @@ flask/app/__pycache__/__init__.cpython-310.pyc
 flask/app/__pycache__/__init__.cpython-310.pyc
 flask/app/__pycache__/database.cpython-310.pyc
 flask/app/__pycache__/routes.cpython-310.pyc
+.gcloudignore

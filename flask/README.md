@@ -1,3 +1,13 @@
+# WARNING
+
+You cannot locally start the app now. To start our app, use this link below:
+
+[http://cs411-team013.uc.r.appspot.com/](http://cs411-team013.uc.r.appspot.com/)
+
+
+
+*The original tutorial is shown below*
+
 # iCourse
 This is a course registration app demo designed for CS411. 
 # Tutorial

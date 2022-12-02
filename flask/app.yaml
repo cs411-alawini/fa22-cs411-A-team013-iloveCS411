@@ -3,6 +3,7 @@ runtime: python38 # or another supported version
 instance_class: F1
 
 env_variables:
+  INSTANCE_UNIX_SOCKET: '/cloudsql/cs411-team013:us-central1:i-course-database'
   MYSQL_USER: 'root' # please put in your credentials
   MYSQL_PASSWORD: 'Team@013' # please put in your credentials
   MYSQL_DB: 'icourse' # please put in your credentials
