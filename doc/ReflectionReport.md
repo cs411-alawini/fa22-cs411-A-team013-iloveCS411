@@ -1,6 +1,7 @@
 **Team Name:** iloveCS411 (Team 013) 
 
 **Project Title:** iCourse
+
 ### 1. Please list out changes in directions of your project if the final project is different from your original proposal (based on your stage 1 proposal submission).
 There have been no changes in the directions of our project. We have created a course management system for both students and professors, and have a very simple and straightforward interface. 
  
@@ -11,13 +12,13 @@ Our application is very simple, but provides powerful functionality. Students ca
 Data for our application is the same (data for courses was taken from UIUC’s course explorer). There have also been no changes for the schema. 
  
 ### 4. Discuss what you change to your ER diagram and/or your table implementations. What are some differences between the original design and the final design? Why? What do you think is a more suitable design? 
-
+THE ER diagram/table implementations have not changed. 
  
 ### 5. Discuss what functionalities you added or removed. Why?
 One functionality that is not present in the final application is the ability of a user to change their password. This was mentioned to be a feature in the initial proposal, but due to time constraints, we did not get to it (as it was not as high of a priority). 
  
 ### 6. Explain how you think your advanced database programs complement your application.
-
+We have a trigger where, if a professor changes the max capacity to some number less than the current number of enrolled students, the max capacity for that section just becomes the current number of enrolled students. This could be useful in cases where professors want to remove any extra seats or stop any new registrations. Our transaction is also useful since it handles situations in which two users could be registering for the same section. 
  
 ### 7. Each team member should describe one technical challenge that the team encountered.  This should be sufficiently detailed such that another future team could use this as helpful advice if they were to start a similar project or where to maintain your project. 
 Ruipeng Ge:
