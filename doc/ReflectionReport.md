@@ -34,10 +34,10 @@ One difference between the final application and the proposal is a commenting sy
  
 ### 9. Describe future work that you think, other than the interface, that the application can improve on
 In the future, some things that can be added and improved for our application are as follows:
-Integrate IDP services for login, which would allow users to use their school credentials to access the system
-For the course explorer, it could be useful to have more filtering conditions, as well as filters for grade distributions
-Another feature that would be useful is to display a map to users showing where their classes are located, which would help users account for walking distance
-A useful improvement to the explorer functionality would be to automatically filter out sections that conflict with a user’s existing schedule
+- Integrate IDP services for login, which would allow users to use their school credentials to access the system
+- For the course explorer, it could be useful to have more filtering conditions, as well as filters for grade distributions
+- Another feature that would be useful is to display a map to users showing where their classes are located, which would help users account for walking distance
+- A useful improvement to the explorer functionality would be to automatically filter out sections that conflict with a user’s existing schedule
  
 
 ### 10. Describe the final division of labor and how well you managed teamwork. 
