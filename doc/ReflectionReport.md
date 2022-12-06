@@ -1,4 +1,5 @@
 **Team Name:** iloveCS411 (Team 013) 
+
 **Project Title:** iCourse
 ### 1. Please list out changes in directions of your project if the final project is different from your original proposal (based on your stage 1 proposal submission).
 There have been no changes in the directions of our project. We have created a course management system for both students and professors, and have a very simple and straightforward interface. 
@@ -20,8 +21,11 @@ One functionality that is not present in the final application is the ability of
  
 ### 7. Each team member should describe one technical challenge that the team encountered.  This should be sufficiently detailed such that another future team could use this as helpful advice if they were to start a similar project or where to maintain your project. 
 Ruipeng Ge:
+
 Lumeng Xu:
+
 Feiya Yu:
+
 Alvin Zhang: One thing that was difficult was making the search results for courses dynamic (the table of classes changes depending on what keyword is entered and what is fetched from the database). This involved some Javascript code to insert components and remove them (grabbing an element, then adding to its innerHTML), which I was unfamiliar with in the beginning. 
  
 ### 8. Are there other things that changed comparing the final application with the original proposal?
@@ -40,7 +44,10 @@ The work was split up depending on each member’s strengths and interests. Ahea
  
 The division of labor is as follows: 
 Ruipeng Ge: Database functionality, Professor’s homepage for managing sections and grades, Student’s course history
+
 Lumeng Xu: Database functionality
+
 Feiya Yu: Worked on login and student homepage. Front-end development for these, and also Flask endpoints for login, drop courses, getting a student’s registered courses. 
+
 Alvin Zhang: Worked on the course explorer page that shows course offerings and sections for those courses. Also added capability for students to enroll in sections. Did the frontend development for this, as well as the flask endpoints necessary. 
 
