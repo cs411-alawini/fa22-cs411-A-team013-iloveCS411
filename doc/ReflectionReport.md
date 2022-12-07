@@ -25,7 +25,7 @@ If we were to develop a schedule on which features to work on first, we would ta
 ### Challenges
 Here is a list of comments from each team member discussing technical challenges they encountered throughout this project: 
  
-Ruipeng Ge: A big challenge was to use flask, since it is different from other frameworks. Web development is new to me before initiating this project. Apart from database systems, I also learned a lot about HTML, CSS, and other things regarding back-end and front-end development.
+Ruipeng Ge: A big challenge was to use flask, since it is different from other frameworks. Web development was new to me before initiating this project. Apart from database systems, I also learned a lot about HTML, CSS, and other things regarding back-end and front-end development.
 
 Lumeng Xu: The biggest difficulty I met was how to calculate the average GPA of a student. Because the code is a combination of python and SQL, I need to first select the grade in character and then change it to corresponding GPAs. And I was not very familiar with it.
  
