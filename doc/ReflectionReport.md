@@ -1,4 +1,5 @@
 **Team Name:** iloveCS411 (Team 013) 
+
 **Project Title:** iCourse
  
 ### Changes from the Proposal
@@ -12,7 +13,7 @@ Another area that ended up deviating from the proposal was the UI design. For ex
  
 Instead, it looks like this: 
 ![fv](images/image_2022-12-06_231252139.png)
- 
+
 ### Improvements
 On the topic of things to improve– we have come up with a few ideas that could potentially be useful for users: 
 Integrate IDP services for login, which would allow users to use their school credentials to access the system
