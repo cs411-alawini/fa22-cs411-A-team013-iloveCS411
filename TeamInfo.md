@@ -20,8 +20,8 @@
 |   Info      |        Description     |
 | ----------- | ---------------------- |
 |  Title      |       I-Course Platform     |
-| System URL  |      link_to_system    |
-| Video Link  |      link_to_video     |
+| System URL  |      [link_to_system](http://cs411-team013.uc.r.appspot.com)   |
+| Video Link  |      [link_to_video](https://www.youtube.com/watch?v=pYg-fUh2HqY)    |
 
 ## Project Summary
 
