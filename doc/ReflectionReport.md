@@ -14,10 +14,10 @@ Instead, it looks like this:
  
 ### Improvements
 On the topic of things to improve– we have come up with a few ideas that could potentially be useful for users: 
-Integrate IDP services for login, which would allow users to use their school credentials to access the system
-For the course explorer, it could be useful to have more filtering conditions, as well as filters for grade distributions
-Another feature that would be useful is to display a map to users showing where their classes are located, which would help users account for walking distance
-A useful improvement to the explorer functionality would be to automatically filter out sections that conflict with a user’s existing schedule
+- Integrate IDP services for login, which would allow users to use their school credentials to access the system
+- For the course explorer, it could be useful to have more filtering conditions, as well as filters for grade distributions
+- Another feature that would be useful is to display a map to users showing where their classes are located, which would help users account for walking distance
+- A useful improvement to the explorer functionality would be to automatically filter out sections that conflict with a user’s existing schedule
 If we were to develop a schedule on which features to work on first, we would target the automatic filtering of courses that can’t fit into a student’ schedule. This is a current grievance with the current course explorer, as even though it shows sections as “Time Conflict”, they are still populating a lot of the search results. 
  
 ### Challenges
