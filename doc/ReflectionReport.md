@@ -1,4 +1,5 @@
 **Team Name:** iloveCS411 (Team 013) 
+
 **Project Title:** iCourse
  
 ### Changes from the Proposal
