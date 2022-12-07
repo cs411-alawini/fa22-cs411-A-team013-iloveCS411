@@ -37,6 +37,7 @@ Alvin Zhang: One thing that was difficult was making the search results for cour
  
 ### Teamwork
 The work was split up depending on each member’s strengths and interests. Ahead of any project deadlines, the topics to be completed were always made known to everyone and distributed. Communication was done over WeChat, and it was where updates were given on project progress. Below is a list showcasing things that each member worked on: 
+
 Ruipeng Ge: Database functionality, Professor’s homepage for managing sections and grades, Student’s course history
  
 Lumeng Xu: Database functionality(Credits change and course updates for students, calculation of credits and GPAs).
