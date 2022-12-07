@@ -25,6 +25,7 @@ If we were to develop a schedule on which features to work on first, we would ta
 Here is a list of comments from each team member discussing technical challenges they encountered throughout this project: 
  
 Ruipeng Ge: A big challenge was to use flask, since it is different from other frameworks. 
+
 Lumeng Xu: The biggest difficulty I met was how to calculate the average GPA of a student. Because the code is a combination of python and SQL, I need to first select the grade in character and then change it to corresponding GPAs. And I was not very familiar with it.
  
 Feiya Yu: The biggest difficulty I faced was to pick up the skills of web development again. It was challenging because we had to develope the entire website in such a short period of time, because we didn’t start building the App earlier.
